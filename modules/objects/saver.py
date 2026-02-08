@@ -9,7 +9,10 @@ class CodeSaver:
         f.close()
     
     def load(self):
-        f = open(self.path, "r")
-        data=f.read(2**30)
-        f.close()
-        return data
+        try:
+            f = open(self.path, "r")
+            data=f.read(2**30)
+            f.close()
+            return data
+        except:
+            return ""

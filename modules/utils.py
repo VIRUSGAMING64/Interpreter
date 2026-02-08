@@ -23,3 +23,9 @@ def CleanCode(code):
             b = not b
         ncode += c
     return ncode
+
+def PosOf(elem, lis:list):
+    try:
+        return lis.index(elem)
+    except:
+        return None
