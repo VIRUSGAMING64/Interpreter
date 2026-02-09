@@ -1,28 +1,102 @@
+from modules.utils import *
+INVALID     = 0B0000000000 #! 0
+NUMBER      = 0B0000000001 #! 1
+STRING      = 0B0000000010 #! 2
+FUNC        = 0B0000000100 #! 4
+NIL         = 0B0000001000 #! 8
+BOLEAN      = 0B0000010000 #! 16
+OPERATION   = 0B0000100000 #! 32
+KEYWORD     = 0B0001000000 #! 64
+LABEL       = 0B0010000000 #! 128
+LINE        = 0B0100000000 #! 256
+VARIABLES   = 0B1000000000 #! 512
 
-NUMBER      = 0B00000001 #! 1
-STRING      = 0B00000010 #! 2
-FUNC        = 0B00000100 #! 4
-NIL         = 0B00001000 #! 8
-BOLEAN      = 0B00010000 #! 16
-OPERATION   = 0B00100000 #! 32
-KEYWORD     = 0B01000000 #! 64
-LABEL       = 0B10000000 #! 128
+
 
 operators =  [
-    "+","-","*","/","**","!","&","|","^","=",")","(","{","}",";",".",",","//"
+    "+","-","%","*","/","**","!","&","|","^","=",")","(","{","}",";",".",",","==","!=","<=",">=","<",">","<<",">>"
 ]
 
 keywords = [
     "goto","if","else","while","fun","True","False"
 ]
 
+maths = {
+    "/":"/",
+    "=":"=",
+    "<":"=",
+    ">":"="
+}
+
+def Tokenize(code):
+
+    pos = 0
+    act_tok = ""
+    toks = []
+
+    while pos <= len(code):
+
+        if (pos < len(code)) and (not code[pos] in operators):
+            act_tok += code[pos]
+        else:
+            dis = -1        
+            act_tok = cleanStr(act_tok)
+            toks.append(Token(act_tok,NIL))
+
+            if pos < len(code):            
+                dis -= 1
+            
+            p = False
+            if act_tok == "":
+                toks.pop()
+                p = True
+
+            if dis == -2:
+                toks.append(Token(code[pos], OPERATION))
+                if pos + 1 != len(code) and code[pos] + code[pos + 1] in operators:
+                    toks[len(toks) - 1].expr += code[pos + 1]
+                    pos += 1
+                
+            if p: 
+                pos += 1
+                continue
+        
+            if toks[len(toks) + dis].expr.isnumeric():
+                toks[len(toks) + dis].type = NUMBER
+            elif toks[len(toks) + dis].expr.startswith("\"") and toks[len(toks) + dis].expr.endswith("\""):
+                toks[len(toks) + dis].type = STRING
+            elif toks[len(toks) + dis].expr.startswith("'") and toks[len(toks) + dis].expr.endswith("'"):
+                toks[len(toks) + dis].type = STRING
+            elif toks[len(toks) + dis].isKeyword():
+                toks[len(toks) + dis].type = KEYWORD
+            elif toks[len(toks) + dis].isLabel():
+                toks[len(toks) + dis].type = LABEL
+            elif toks[len(toks) + dis].expr.isalnum():
+                toks[len(toks) + dis].type = VARIABLES
+            
+            act_tok = ""
+
+        pos += 1
+
+
+    line_tokens = []
+    for i in range(len(toks)):
+        line:Token = toks[i]
+        if line.type == NIL:
+            splited_tokens = line.getErrs()
+            for t in splited_tokens:
+                line_tokens.append(t[0])
+        else:
+            line_tokens.append(line)
+    return line_tokens
+
 
 
 class Token:
-    def __init__(self,expr, type = NIL, opt = None):
-        self.expr = expr
+    def __init__(self,expr, type = NIL, tokens = None):
+        self.expr:str = expr
         self.type = type
-        self.opt  = opt
+        self.tokens  = tokens
 
     def isKeyword(self):
         return self.expr in keywords
@@ -33,3 +107,18 @@ class Token:
     def isLabel(self):
         return True if self.expr.endswith(":") else False
     
+    def math(self, token):
+        if token.expr in maths[self.expr]:
+            return True
+        return False
+    
+    def getErrs(self):
+        self.expr = self.expr.split(' ')
+        
+        if len(self.expr) == 1:
+            return [[Token(self.expr[0],INVALID)]]
+        arr = []
+        for x in self.expr:
+            arr.append(Tokenize(x))
+
+        return arr

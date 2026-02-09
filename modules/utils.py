@@ -29,3 +29,10 @@ def PosOf(elem, lis:list):
         return lis.index(elem)
     except:
         return None
+
+def cleanStr(s: str) -> str:
+    while s.startswith(" "):
+        s = s.removeprefix(" ")
+    while s.endswith(" "):
+        s = s.removesuffix(" ")
+    return s
