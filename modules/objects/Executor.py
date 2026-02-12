@@ -1,5 +1,8 @@
 from modules.utils import *
 from .Expression import *
+import json
+
+
 
 
 class Executor:
@@ -9,6 +12,11 @@ class Executor:
     def run(self, code = None):
         if code != None:
             self.code = code
+        output = {
+            "SyntaxErros":None,
+            "Errors": None,
+            "result":""
+        }
 
         code = self.code.split("\n")
         print(code)
@@ -28,7 +36,7 @@ class Executor:
                 
 
             lines.append(ex)
-    
-        if len(errors) != 0:
-            print(errors)
-            raise "errors sintaxis"
+        
+        output["SyntaxErros"] = errors
+        output["result"] = "no syntaxis error"
+        return output

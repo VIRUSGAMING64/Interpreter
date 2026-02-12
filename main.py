@@ -1,21 +1,29 @@
 import flask
 import os
 from modules import *
-app     = flask.Flask("INTERPRETER")
-ROOT    = os.path.realpath("./gui")
-saver   = CodeSaver("src")
-CODE    = saver.load()
 
+app   = flask.Flask("INTERPRETER")
+ROOT  = os.path.realpath("./gui")
+saver = CodeSaver("src")
+CODE  = saver.load()
 
 @app.route("/run")
 def run():
     global CODE
-    code = flask.request.args.get("code","")
-    if code != CODE:
-        CODE = code
-        saver.save(code)
-
-    return response(ROOT+"/index.html")
+    try:
+        code = flask.request.args.get("code","")
+        print("running code...")
+        if code != CODE:
+            CODE = code
+            saver.save(code)
+        exe = Executor(code)
+        out = exe.run()
+        return out,200
+    except Expression as e:
+        return {
+            "status":"fail",
+            "error": f"{str(e)}"
+        },200
 
 @app.route("/save")
 def save(): 
@@ -30,7 +38,6 @@ def save():
 @app.route("/getcode")
 def sendCode():
     return {"status":"ok","code":CODE},200
-
 
 @app.route("/")
 def main():

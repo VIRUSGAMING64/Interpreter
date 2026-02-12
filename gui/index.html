@@ -1,17 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body class="body">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="/gui/lib/codemirror/codemirror.min.css">
+        <link rel="stylesheet" href="/gui/lib/codemirror/dracula.min.css">
+        <script src="/gui/lib/codemirror/codemirror.min.js"></script>
+        <script src="/gui/lib/codemirror/python.min.js"></script>
+    </head>
 
-    <script src="/gui/main.js"></script>
-    <link rel="stylesheet" href="/gui/styles.css">
-    <div class="MainContainer">
-        <div contenteditable="true"  class = "writer" id="writer"></div>
-        <button onclick='submitCode("run")' class = "submitter">Submit</button>
-    </div>
-</body>
+    <body class="body">
+
+        <link rel="stylesheet" href="/gui/styles.css">
+        <div>
+            <div class="MainContainer">
+                <textarea id="writer" name="code" class="code"></textarea>
+                <button onclick='submitCode("run")' class = "submitter">Submit</button>
+            </div>
+            <div class="output">
+                <label1 id="output">
+                    Hola esta es la salida del programa
+                </label>
+            </div>
+        </div>
+        <script src="/gui/main.js"></script>
+    </body>
 </html>
