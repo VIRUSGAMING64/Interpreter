@@ -1,16 +1,17 @@
 
 
-INVALID     = 0B0000000000 #! 0
-NUMBER      = 0B0000000001 #! 1
-STRING      = 0B0000000010 #! 2
-FUNC        = 0B0000000100 #! 4
-NIL         = 0B0000001000 #! 8
-BOLEAN      = 0B0000010000 #! 16
-OPERATION   = 0B0000100000 #! 32
-KEYWORD     = 0B0001000000 #! 64
-LABEL       = 0B0010000000 #! 128
-LINE        = 0B0100000000 #! 256
-VARIABLES   = 0B1000000000 #! 512
+INVALID     = 0B00000000000 #! 0
+NUMBER      = 0B00000000001 #! 1
+STRING      = 0B00000000010 #! 2
+FUNC        = 0B00000000100 #! 4
+NIL         = 0B00000001000 #! 8
+BOLEAN      = 0B00000010000 #! 16
+OPERATION   = 0B00000100000 #! 32
+KEYWORD     = 0B00001000000 #! 64
+LABEL       = 0B00010000000 #! 128
+LINE        = 0B00100000000 #! 256
+VARIABLES   = 0B01000000000 #! 512
+COMMENT     = 0B10000000000 #! 1024
 
 P0 = [
     "==",
@@ -59,9 +60,10 @@ keywords = [
     "if",
     "else",
     "while",
-    "fun",
+    "func",
     "True",
-    "False"
+    "False",
+    "for"
 ]
 
 maths = {

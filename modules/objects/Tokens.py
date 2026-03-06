@@ -1,5 +1,6 @@
 from modules.utils import *
 from modules.t_statics import *
+from .types import *
 
 def Tokenize(code):
 

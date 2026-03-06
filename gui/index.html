@@ -11,19 +11,24 @@
     </head>
 
     <body class="body">
+        
+        <table id="saves">
+            <button class = "new" onclick="NewCode()">New</button>
+            <button class = "del">delete</button>
+        </table>
 
-        <link rel="stylesheet" href="/gui/styles.css">
-        <div>
-            <div class="MainContainer">
-                <textarea id="writer" name="code" class="code"></textarea>
-                <button onclick='submitCode("run")' class = "submitter">Submit</button>
-            </div>
-            <div class="output">
-                <label1 id="output">
-                    Hola esta es la salida del programa
-                </label>
-            </div>
+        <div class = "MainContainer">        
+            <link rel="stylesheet" href="/gui/styles.css">
+            <textarea id="writer" name="code" class="code"></textarea>                        
         </div>
+
+        <div>
+            <button onclick='submitCode("run")' class = "submitter">Submit</button>
+            <label1 class="output">
+                out:
+            </label>
+        </div>
+
         <script src="/gui/main.js"></script>
     </body>
 </html>
