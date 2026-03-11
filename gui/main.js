@@ -94,9 +94,9 @@ async function getCode() {
 async function delcurr() {
     editor.setValue("")
     var div = document.getElementById(current)
+    await fetch("/delcurr?name="+current)
     div.remove()
     submitCode("save")
-    await fetch("/delcode?name="+current)
     alert("deleted file: " + current)
     current = ""
 

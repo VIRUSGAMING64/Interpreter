@@ -1,0 +1,88 @@
+from .Tokens import *
+from .Expression import *
+
+class IF: 
+    err = []
+    def __init__(self,linenumer ,decl, code = None):
+        self.code = None
+
+        if len(decl.tokens) != 2:
+            raise Exception(f"invalid declaration at line [{decl.get("line", "unknow")}]")  
+            
+        self.cond = decl.tokens[1]
+        self.code = code
+        self.expr = decl.tokens[0].expr + " " + decl.tokens[1].expr
+
+    def Token(self):
+        tok =  Token(
+                self.expr,
+            CONDITION,
+            self.code.tokens
+        )
+        tok.data["condition"] = self.decl.tokens[1].expr
+        return tok
+
+class FUNCS: 
+    def __init__(self,start, lines):
+        self.code   = None
+        self.decl   = lines[start]
+        self.i      = self.decl.get("line", "unknow")
+        self.novars = []
+        self.declaration()
+
+    def declaration(self):
+        print("Hereee")
+        if len(self.decl.tokens) < 4:
+            raise Exception(f"Invalid function declaration at line [{self.i}]")
+
+        print("Hereee")
+        toks = self.decl.tokens
+        novars = []
+        if toks[1].type != VARIABLES or toks[2].expr != "(":
+            raise Exception(f"invalid token in function declaration at line [{self.i}]")
+        
+        for pointer in range(3, len(toks), 2):
+            try:
+                try:
+                    var = toks[pointer]
+                    comma = toks[pointer + 1]
+                except Exception as e:
+                    if (var.expr == ")") and pointer == 3:
+                        break
+                    raise Exception(f"Invalid token in function declaration at line [{self.i}]")
+                
+                if var.type != VARIABLES:
+                    raise Exception(f"Invalid function declaration at line [{self.i}]")
+               
+                novars.append(var.expr)      
+
+                if comma.expr == ")":
+                    if (pointer + 2 != len(toks)):
+                        raise Exception(f"Invalid function declaration at line [{self.i}]")
+                    break
+
+                if comma.expr != ',':                
+                    for i in toks:
+                        print(i.expr, end = " ")
+                    print(var.expr,comma.expr)
+                    raise Exception(f"invalid token in function declaration [{self.i}]")
+                 
+
+            except Exception as e:
+                raise e
+
+        self.novars = novars
+        self.name = toks[1].expr
+        print(novars,set(novars))
+        if len(novars) != len(set(novars)):
+            raise Exception(f"Invalid function declaration at line [{self.i}]")
+
+
+    def Token(self):
+        return Token(
+            self.name,
+            FUNC,
+          self.code.tokens
+        )
+    
+class FUNC_CALL: ...

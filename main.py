@@ -12,9 +12,11 @@ for name in cods:
         continue
     codes[name] = data
 
+
 app   = flask.Flask("app")
 ROOT  = os.path.realpath("./gui")
 saver = CodeSaver("codes/")
+
 
 @app.route("/run")
 def run():
@@ -102,7 +104,7 @@ def newcode():
     codes[name] = ""
     return res,200
 
-@app.route("/delcode")
+@app.route("/delcurr")
 def delcode():
     file = flask.request.args.get("name")
     file.replace("..", "")

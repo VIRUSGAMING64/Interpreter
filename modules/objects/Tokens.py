@@ -73,6 +73,13 @@ class Token:
         self.expr:str = expr
         self.type = type
         self.tokens  = tokens
+        self.data = {}
+
+    def get(self,key,default):
+        return self.data.get(key,default)
+    
+    def put(self, key ,data):
+        self.data[key] = data
 
     def isKeyword(self):
         return self.expr in keywords

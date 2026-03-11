@@ -1,61 +1,11 @@
 from modules.utils import *
 from .Expression import *
 import json
+import modules.objects.debug as debug
+
 import os
+from .structures import *
 mem = Memory()
-
-class IF: 
-    err = []
-    def __init__(self,linenumer ,decl, code = None):
-        self.code = None
-
-        if len(decl.tokens) != 2:
-            raise Exception(f"invalid declaration at line [{linenumer+1}]")  
-            
-        self.cond = Expression(decl.tokens[1])
-        self.code = code
-
-    def Token(self):
-        Token("__if__",CONDITION, self.code)
-
-class func: 
-    def __init__(self,start, lines):
-        self.code   = None
-        self.decl   = lines[start]
-        self.i      = start
-        self.novars = []
-        self.declaration()
-
-    def declaration(self):
-        print("Hereee")
-        if len(self.decl.tokens) < 4:
-            raise Exception(f"invalid declaration at line [{self.i}]")
-
-        print("Hereee")
-        toks = self.decl.tokens
-        novars = []
-        for pointer in range(3, len(toks), 2):
-            try:
-                var = toks[pointer]
-                comma = toks[pointer + 1]
-
-                if comma.expr == ")":
-                    if (pointer + 2 != len(toks)):
-                        raise f"Invalid function declaration at line [{self.i}]"
-                    break
-
-                if comma.expr != ',' or var.type != VARIABLES:                
-                    for i in toks:
-                        print(i.expr, end = " ")
-                    print(var.expr,comma.expr)
-                    raise Exception(f"invalid token un function declaration [{self.i}]")
-                
-                novars.append(var.expr)       
-
-            except Exception as e:
-                raise e
-
-        self.novars = novars
 
 class Executor:
     def __init__(self,code = ""):
@@ -63,10 +13,10 @@ class Executor:
 
     def func(self,start, lines):
         eofun,code = self.extract(start + 1, lines)
-        fun = None
         try:
-            fun = func(start,lines)
-            fun.code = lines[start+1:eofun]
+            fun = None
+            fun = FUNCS(start,lines)
+            fun.code = code
         except Exception as e:
             self.output["Errors"].append(str(e))
             print(e)
@@ -95,18 +45,22 @@ class Executor:
 
         while i < len(lines):
             line = lines[i]
+
             if line.tokens[0].expr == "if":
                 cond,i = self.control(i,lines)
                 if cond != None:
                     structure.tokens.append(cond.Token())
             
             elif line.tokens[0].expr == "while":
-                LOOP(i,lines)
-            
+                pass
+
             elif line.tokens[0].expr == "func":
                 func,i = self.func(i,lines)
-                structure.tokens.append(func)
+                if func != None:
+                    mem.alloc_func(func.name, func.novars, func.code)
+                    structure.tokens.append(func.Token())
             else:
+                print("added",line.expr)
                 structure.tokens.append(line)
             
             if line.tokens[0].expr == "end":
@@ -122,6 +76,8 @@ class Executor:
 
 
     def run(self, code = None):
+        global mem
+        
         if code != None:
             self.code = code
 
@@ -137,14 +93,12 @@ class Executor:
 
 
         lines = TokenizeSource(code,self.output)
-        structure = self.extract(0,lines)
 
-        
-        
-        
+        s,structure = self.extract(0,lines)
         
         self.output["result"] = "no syntaxis error"
-
+        
+        debug.dst(structure)
 
 
         return self.output

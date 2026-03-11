@@ -1,11 +1,9 @@
-
-
-class Var:
+class mem_Var:
     def __init__(self, name, value):
         self.name = name
         self.value = value
 
-class Func:
+class mem_Func:
     def __init__(self, name, args, code):
         self.name = name
         self.args = args
@@ -20,7 +18,7 @@ class Memory:
         val = self.mem.get(addr,None)
         if val != None:
             raise "Overwrite addr"
-        self.mem[addr] = Var(
+        self.mem[addr] = mem_Var(
             addr, 0
         )
 
@@ -34,5 +32,5 @@ class Memory:
             raise "Overwrite addr"
         
         self.mem[addr] = {
-            Func(addr,NoA, code)
+            mem_Func(addr,NoA, code)
         }

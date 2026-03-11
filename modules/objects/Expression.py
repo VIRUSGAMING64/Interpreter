@@ -17,10 +17,8 @@ class Expression:
             "expr":self.expr,
             "type":self.type
         }
-    
 
 def TokenizeSource(code,output):
-    
         lines = []
         p = 0
         for line in code:
@@ -29,6 +27,7 @@ def TokenizeSource(code,output):
             ex = Expression(line)
             print("-" * 8)
             line = ex.Token()
+            line.put("line", p)
             lines.append(line)
             for j in range(len(line.tokens)):
                 if line.tokens[j].expr == "//":

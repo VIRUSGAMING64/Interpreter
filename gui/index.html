@@ -15,45 +15,82 @@
     <script src="/gui/lib/tailwind.js"></script>
 </head>
 
-<body class="bg-gray-950 text-white overflow-hidden w-screen h-screen l-0 r-0">
+<body class="bg-indigo-500 h-screen max-h-screen">
+    <div class="bg-neutral-950/95 w-full h-screen flex flex-col">
+        <div class="p-3">
+            <div class="bg-indigo-300/5 w-full h-12 rounded-full p-2 flex">
+                
+                <div class="w-full overflow-x-scroll h-8">
+                    <div class="flex" id="saves"></div>
+                </div>
 
-    <div class="flex items-center bg-slate-200/5 h-14">
-        <div class="flex w-full pl-3 pr-3">
-            <div class="flex w-full">
-                <div id="saves" class="flex"></div>
-                <div class="flex justify-center items-center">
-                    <button class="text-3xl" onclick="NewCode()">
-                        <span class="material-icons-round">add</span>
-                    </button>
+                <div class="flex justify-end">
+                    <div class="flex rounded-full pl-2">
+                        <div class="w-8 h-8 rounded-full cursor-pointer hover:bg-indigo-600 bg-indigo-500 flex items-center justify-center"
+                            onclick="delcurr()">
+                            <span class="material-icons text-black/80">delete</span>
+                        </div>
+                        <div class="pl-2">
+                            <div class="w-8 h-8 rounded-full cursor-pointer hover:bg-indigo-600 bg-indigo-500 flex items-center justify-center"
+                                onclick="NewCode()">
+                                <span class="material-icons text-black/80 ">add</span>
+                            </div>
+                        </div>
+                        <div class="pl-2">
+                            <div class="w-8 h-8 rounded-full cursor-pointer hover:bg-indigo-600 bg-indigo-500 flex items-center justify-center"
+                            onclick='submitCode("run")'>
+                                <span class="material-icons text-black/80 ">chevron_right</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="flex justify-center items-center">
-                <button class="" onclick="delcurr()">
-                    <span class="material-icons-round">
-                        delete
-                    </span>
-                </button>
+        </div>
+
+        <div class="h-full flex flex-col">
+            <div class="p-3 pt-0 h-full">
+
+                <div class="h-full bg-black/90 rounded-3xl flex flex-col">
+                    <div class="flex h-12 pl-4 pr-4 w-full font-google items-center text-white/40">
+                
+                        <div class="pl-2 font-monospace">code</div>
+                
+                        <div class="w-full flex justify-end cursor-default select-none">
+                            <span class="material-icons-round">code</span>
+                        </div>
+                    </div>
+        
+                    <div class="p-6 pt-0 h-full">
+                        <div class="text-white/80  font-monospace h-full pb-6 w-full relative">
+                            <div class="absolute  rounded-lg w-full h-full overflow-y-scroll">
+                                <div class="coder">
+                                    <textarea id="writer" name="code" class="code"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+        
             </div>
+
+            <div class="p-3 pt-0">
+                <div class="h-40 bg-black/90 rounded-3xl">
+                    <div class="terminal">
+                        <div class="flex h-12 pl-4 pr-4 w-full font-google items-center text-white/40">
+                            <div class="pl-2 font-monospace">terminal</div>
+                            <div class="w-full flex justify-end cursor-default select-none">
+                                <span class="material-icons-round">terminal</span>
+                            </div>
+                        </div>
+                        <div class="console output pl-6 pr-6 pb-6 text-white font-monospace"></div>
+                    </div>
+                </div>
+            </div>
+        
         </div>
     </div>
-
-    <div class="flex flex-col h-full">
-        <div class="code-out flex h-4/5">
-            <div class="coder w-full">
-                <textarea id="writer" name="code" class="code"></textarea>
-            </div>
-
-            <div class="out-run w-0">
-                <button onclick='submitCode("run")' class="rounded-full hover:bg-black/20 h-10 w-10 text-3xl">
-                    <span class="material-icons-round translate-x-[-2.5rem] scale-150">chevron_right</span>
-                </button>
-
-            </div>
-
-        </div>
-        <div class="overflow-scroll output h-1/5 bg-neutral-900/80 p-4" style="font-family: monospace;"></div>
-    </div>
-
+    </script>
 </body>
 
 </html>
