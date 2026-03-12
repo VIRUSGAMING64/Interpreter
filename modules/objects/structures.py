@@ -6,12 +6,12 @@ class IF:
     def __init__(self,linenumer ,decl, code = None):
         self.code = None
 
-        if len(decl.tokens) != 2:
+        if len(decl.tokens) < 2:
             raise Exception(f"invalid declaration at line [{decl.get("line", "unknow")}]")  
             
-        self.cond = decl.tokens[1]
+        self.cond = decl.tokens[1:]
         self.code = code
-        self.expr = decl.tokens[0].expr + " " + decl.tokens[1].expr
+        self.expr = decl.expr
 
     def Token(self):
         tok =  Token(
@@ -19,7 +19,7 @@ class IF:
             CONDITION,
             self.code.tokens
         )
-        tok.data["condition"] = self.decl.tokens[1].expr
+        tok.data["condition"] = self.cond
         return tok
 
 class FUNCS: 

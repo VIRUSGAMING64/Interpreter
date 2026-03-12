@@ -65,6 +65,7 @@ keywords = [
     "while",
     "func",
     "True",
+    "var",
     "False",
     "for",
     "end"

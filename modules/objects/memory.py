@@ -14,12 +14,9 @@ class Memory:
     def __init__(self,memory_map = {} , max_alloc=-1):
         self.mem = memory_map
 
-    def alloc_var(self, addr):
-        val = self.mem.get(addr,None)
-        if val != None:
-            raise "Overwrite addr"
+    def alloc_var(self, addr,value):
         self.mem[addr] = mem_Var(
-            addr, 0
+            addr, value
         )
 
     def query(self,addr):

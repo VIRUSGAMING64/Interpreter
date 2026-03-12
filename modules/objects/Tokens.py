@@ -45,7 +45,7 @@ def Tokenize(code):
                 t_obj.type = KEYWORD
             elif t_obj.isLabel():
                 t_obj.type = LABEL
-            elif t_obj.expr.isalnum():
+            elif t_obj.VarName():
                 t_obj.type = VARIABLES
             
             act_tok = ""
@@ -86,6 +86,19 @@ class Token:
     
     def isOperator(self):
         return self.expr in operators
+    
+    def VarName(self):
+        alphas = ""
+        for i in self.expr:
+            if i.isalnum():
+                alphas+=i
+            elif i != "_":
+                return False
+            
+        if len(alphas) >= 1:
+            return True
+        print(alphas)
+        return False
     
     def isLabel(self):
         return True if self.expr.endswith(":") else False

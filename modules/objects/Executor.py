@@ -2,10 +2,11 @@ from modules.utils import *
 from .Expression import *
 import json
 import modules.objects.debug as debug
-
 import os
 from .structures import *
+from .ast import AST
 mem = Memory()
+ast = AST()
 
 class Executor:
     def __init__(self,code = ""):
@@ -45,6 +46,10 @@ class Executor:
 
         while i < len(lines):
             line = lines[i]
+            if len(line.tokens) == 0:
+                print(line.tokens, line.expr)
+                i+=1
+                continue
 
             if line.tokens[0].expr == "if":
                 cond,i = self.control(i,lines)
@@ -53,20 +58,26 @@ class Executor:
             
             elif line.tokens[0].expr == "while":
                 pass
-
             elif line.tokens[0].expr == "func":
                 func,i = self.func(i,lines)
                 if func != None:
                     mem.alloc_func(func.name, func.novars, func.code)
                     structure.tokens.append(func.Token())
+            elif line.tokens[0].expr == "var":
+                try:
+                    if line.tokens[1].type != VARIABLES or line.tokens[2].expr != "=":
+                        raise "error"
+                    
+                    mem.alloc_var(line.tokens[1].expr, ast.eval(line.tokens[3:]))
+                except:
+                    self.output["Errors"].append(f"Invalid variable declaration at line [{line.get("line","unknow")}]")
             else:
                 print("added",line.expr)
-                structure.tokens.append(line)
-            
+                structure.tokens.append(line)   
             if line.tokens[0].expr == "end":
                 return i,structure
-                        
-            i   += 1 
+                       
+            i += 1 
 
         if start != 0:
             self.output["Errors"].append("Not closed structure")
@@ -74,9 +85,9 @@ class Executor:
         return i,structure 
 
 
-
     def run(self, code = None):
         global mem
+        mem.mem =  {}
         
         if code != None:
             self.code = code
@@ -85,20 +96,16 @@ class Executor:
             "Errors": [],
             "result":""
         }
-        print(self.code)
         self.code = self.code.replace("\t","  ")
-        print(self.code)
-
+        self.code = self.code.replace("\r","  ")
         code = self.code.split("\n")
-
-
         lines = TokenizeSource(code,self.output)
-
         s,structure = self.extract(0,lines)
-        
-        self.output["result"] = "no syntaxis error"
-        
+        if len(self.output["Errors"]) == 0:
+            self.output["result"] = "no syntaxis error"
+        else:
+            self.output["result"] = "to many errors"
+            
         debug.dst(structure)
-
-
+        print(mem.mem)
         return self.output
