@@ -6,7 +6,7 @@ import logging
 from modules.generic.utils import *
 #init of app endpoint and errors ej:(404)
 from modules.web.api.endpoints import *
-from modules.web.api.errors import *
+from modules.web.core.errors import *
 
 
 
@@ -23,6 +23,10 @@ for name in os.listdir(CODES_DIR):
 @app.route("/")
 def main():
     return response(ROOT+"/index.html")
+
+@app.route("/api")
+def api():
+    return response(ROOT + "/api.html")
 
 
 @app.route('/gui/<path:subpath>')
