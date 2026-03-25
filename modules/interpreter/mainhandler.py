@@ -4,6 +4,7 @@ import json
 import modules.interpreter.debug as debug
 import os
 from .structures import *
+from .evaluator import Evaluator
 import logging
 
 class MainHandler:

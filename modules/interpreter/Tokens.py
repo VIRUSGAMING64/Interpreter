@@ -65,6 +65,7 @@ def Tokenize(code: str) -> list[Token]:
                 t_token.type = LABEL
             elif t_token.VarName():
                 t_token.type = VARIABLES
+                t_token.data["name"] = t_token.expr
             
             act_tok = ""
 

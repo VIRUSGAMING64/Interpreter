@@ -34,7 +34,7 @@ class Expression:
         for elem in toks.tokens:
 
             if elem.type == VARIABLES:
-                elem.expr = self.memory.query(elem.expr)
+                elem.expr = self.memory.query(elem.data["name"])
 
             if elem.expr == "(":
                 oper.append(elem)

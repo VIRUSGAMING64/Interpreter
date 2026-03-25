@@ -1,3 +1,4 @@
+from modules.interpreter.Exceptions import *
 class mem_Var:
     def __init__(self, name, value):
         self.name = name
@@ -10,7 +11,6 @@ class mem_Func:
         self.code = code
         self.value = f"function at [{name}]"
 
-
 class Memory:
     def __init__(self,memory_map = None , max_alloc=-1):
         self.mem = {} if memory_map is None else memory_map
@@ -21,13 +21,16 @@ class Memory:
         )
 
     def query(self,addr):
-        value = self.mem.get(addr,None).value
-        return value
+        try:
+            value = self.mem.get(addr,None).value
+            return value
+        except:
+            raise InterpreterMemoryError(F"Addr of variable [{addr}] is invalid or variable not declared")
 
     def alloc_func(self,addr, NoA, code):
         val = self.mem.get(addr,None)
         if val != None:
-            raise MemoryError("Overwrite addr")
+            raise InterpreterMemoryError(f"Overwrite addr [{addr}]")
         
         self.mem[addr] = mem_Func(addr,NoA, code)
         
