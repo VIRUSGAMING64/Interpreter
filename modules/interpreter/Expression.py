@@ -136,7 +136,3 @@ def TokenizeSource(code,output):
                 print(j.type,j.expr)
         
         return lines
-
-
-
-Expression("-13").evalstr()[0][0].expr

@@ -112,7 +112,6 @@ class Evaluator:
     def jump(self, pos):
         self.pos = pos
 
-
     def variable_declaration(self, line, mem):
         try:
             try:
