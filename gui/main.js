@@ -59,6 +59,7 @@ async function submitCode(path) {
 }
 
 async function changeto(idx){
+    console.log(idx)
     const response = await fetch("/api/getcode?name="+idx)
     current = idx
     const data = await response.json()
@@ -74,34 +75,35 @@ async function NewCode() {
     while (names == ""){
         names = prompt("Name of new file: ")
     }
-    current = names
-    var butt = document.createElement("button")
-    butt.className = "saves"
-    butt.onclick = function () { changeto(names) }
-    butt.id = names
-    butt.textContent = names
-    buttons.appendChild(butt)
+    current            = names
+    var butt           = document.createElement("button")
+    butt.className     = "saves"
+    butt.onclick       = function () { changeto(names) }
+    butt.id            = names
+    butt.textContent   = names
+    buttons.appendChild(butt)   
     await fetch("/api/newcode?name="+names)
     editor.setValue("")
 }
 
 async function initSaved() {
-    const response = await fetch("/api/initcodes")
-    const data = await response.json()
-
-    var buttons = document.getElementById("saves")
+    const response  = await fetch("/api/initcodes")
+    const data      = await response.json()
+    var buttons     = document.getElementById("saves")
     ok = 0
     if (data["status"] == "ok"){
         for(var i = 0; i < data["names"].length; i ++){
-            id = data["names"][i]
-            var butt = document.createElement("button")
-            butt.className = "saves"
-            butt.onclick = function() { changeto(id) }
-            butt.id = id
-            butt.textContent = id
+            console.log(data["names"][i])
+            const id         = data["names"][i]
+            var butt         = document.createElement("button")
+            butt.className   = "saves"
+            butt.onclick     = function() { changeto(id) }
+            butt.id          =  id
+            butt.textContent =  id
+            ok               = 1
+            current          = id
             buttons.appendChild(butt)
-            ok = 1
-            current = id
+            
         }
     }
     return ok

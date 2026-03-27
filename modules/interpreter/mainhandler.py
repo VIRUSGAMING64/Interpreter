@@ -38,7 +38,6 @@ class MainHandler:
         assert eoif >= start
         return  cond,eoif
 
-
     def extract(self,start,lines):
         i = start
         structure = Token("__source_code__")
@@ -46,11 +45,11 @@ class MainHandler:
 
         while i < len(lines):
             line = lines[i]
+
             if len(line.tokens) == 0:
                 logging.log(logging.DEBUG,line.tokens, line.expr)
                 i+=1
                 continue
-
             elif line.tokens[0].expr == "if":
                 cond,i = self.control(i,lines)
                 if cond != None:

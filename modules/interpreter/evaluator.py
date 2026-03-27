@@ -72,8 +72,7 @@ class Evaluator:
             except:
                 Expression(None, mem).evalTokens(line)
         except InterpreterException as e:
-            if isinstance(e, ArithmeticException):
-                self.out["Errors"].append(e.GetError())
+            self.out["Errors"].append(e.GetError())
             return INVALID
 
 

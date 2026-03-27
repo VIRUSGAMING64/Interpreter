@@ -37,7 +37,7 @@ class Memory:
 
     def query(self,addr):
         try:
-            value = self.mem.get(addr,None).value
+            value = self.mem.get(addr).value
             return value
         except:
             raise InterpreterMemoryError(F"Addr of variable [{addr}] is invalid or variable not declared")
