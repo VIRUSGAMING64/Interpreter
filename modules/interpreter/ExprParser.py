@@ -82,7 +82,7 @@ class ExprParser:
         for i,arg_name in enumerate(m_func.args):
             args[i] = Token(args[i], GetType(args[i]))
             args[i].data["name"] = arg_name
-            mem.alloc_var(
+            newmem.alloc_var(
                 arg_name, args[i].expr, True
             )
             p[arg_name] = False
