@@ -8,6 +8,7 @@ var Current;
 var api = new API()
 var Savesid = new Array()
 var editor
+var Lstate = ""
 
 function init() {
     console.log("inited")
@@ -33,10 +34,12 @@ function init() {
         if (!Current || !editor){
             return
         }
-        api.save(Current, editor.getValue()).catch(()=>{})
+        value = editor.getValue()
+        if (Lstate != value){
+            api.save(Current, value).catch(()=>{})
+            Lstate = value
+        }
     }, 1000)
-
-
 }
 setTimeout(init, 1000)
 
@@ -48,7 +51,7 @@ function changeto(name) {
 }
 
 function Console({tex}){
-    return <div className="w-full h-full">{tex}</div>
+    return <textarea readOnly={true} className="border-violet-950 w-full h-full flex-col bg-black" value={tex}></textarea>
 }
 
 export default function App() {
@@ -135,21 +138,27 @@ export default function App() {
     }
 
     return(
-    <div className="w-screen h-screen absolute">   
-        <div className="w-full flex h-10">
-            <Saves arr = {arr} func={changeto} ></Saves>
-            <div className="flex items-center">
-                <Button onclick={addSaveWithPrompt} text="add"/>
-                <Button onclick={deletecurrent} text="delete"/>
+    <div className="w-full h-full absolute">   
+        <div className="p-4 h-3/5 w-full">
+            <div className="border-gray-900 border-2 rounded-full bg-black text-red-900 rw-full flex p-2 overflow-x-auto">
+                
+                <Saves arr = {arr} func={changeto} ></Saves>
+                <div className="flex pr-2 items-center">
+                    <Button onclick={addSaveWithPrompt} text="add"/>
+                    <Button onclick={deletecurrent} text="delete"/>
+                </div>
+
+            </div>
+            <div className="h-full w-full">
+                <textarea id="editor"></textarea>
             </div>
         </div>
-        <div className="h-3/4 w-full">
-            <textarea id="editor"></textarea>
-        </div>
-        <div className="flex p-4 rounded-lg border-gray-950 bg-gray-800 m-4  w-full h-full">
-            <Console tex={consoleout}></Console>
-            <div>                
-                <Button onclick={run} text="play_arrow"/>
+        <div className="border-3 border-gray-900 w-full h-full flex items-center justify-end p-4">
+            <div className="flex pt-8 rounded-lg border-gray-950 m-4  w-full h-full">
+                <Console tex={consoleout}></Console>
+                <div>                
+                    <Button onclick={run} text="play_arrow"/>
+                </div>
             </div>
         </div>
     </div>

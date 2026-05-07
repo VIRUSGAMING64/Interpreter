@@ -98,3 +98,10 @@ class LoopException(InterpreterException):
     
     def GetError(self):
         return f"[Error excecuting loop {self.GetLine()}]"
+    
+class ZeroDivisionException(InterpreterException):
+    def __init__(self, line, *args):
+        super().__init__(line, *args)
+
+    def GetError(self):
+        return f"[Error zero division at {self.GetLine()}]"    

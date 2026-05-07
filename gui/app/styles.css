@@ -8,13 +8,14 @@ button {
 
 @font-face {
     font-family: "Google Sans";
-    src: url('./lib/google-sans.ttf'); 
+    src: url('./google-sans.ttf'); 
 }
 
 .CodeMirror.cm-s-dracula {
     border-radius: 10px;
     width: 100%;
     height: 100%;
+    padding-top: 4px;
 }
 
 .font-google {
@@ -24,8 +25,6 @@ button {
 .saves {
     cursor: pointer;
     border-radius: 9999px;
-    color: rgb(255, 255, 255, .5);
-    background: rgb(0, 0, 0, .25);
     font-family: "Google Sans";
     height: 2rem;
     padding-left: 0.75rem;

@@ -127,6 +127,8 @@ class Lexer:
             return Token("", LINE, data = {"line": p})
         
         t_line = self.str2Token(line)
+        t_line.put("line", p)
+        
         for j in range(len(t_line.tokens)):
             if t_line.tokens[j].expr == "//":
                 t_line.tokens[j].type = COMMENT
@@ -137,11 +139,11 @@ class Lexer:
             if t_line.tokens[j].type == KEYWORD and j != 0:
                 self.output["Errors"].append(f"keyword not in the start of line [{p}]")
                 break
+                
+            t_line.tokens[j].put("line", p)
 
         for j in t_line.tokens:
             if j.type == INVALID:
                 self.output["Errors"].append(f"invalid token at line: {p}")
-
-        t_line.put("line", p)
-        
+            
         return t_line

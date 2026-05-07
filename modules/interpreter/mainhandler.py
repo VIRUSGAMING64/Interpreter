@@ -14,12 +14,17 @@ def ExecuteCode(code):
             "Errors": ["code is invalid"],
             "result": ""
         }
-    
+
+    if code == "":
+        return {"Errors": [], "result":""}
+
     memory = Memory()
+
     output = {
         "Errors": [],
         "result":""
         }
+
     struct = None
 
     if isinstance(code,dict):

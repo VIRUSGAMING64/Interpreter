@@ -24,9 +24,6 @@ def api():
 
 @app.route('/<path:subpath>')
 def show_subpath(subpath):
-    if(not "." in subpath):
-        subpath = subpath + ".html"
-        
     try:
         safe_path = CodeSaver(ROOT).resolve_path(subpath) 
     except Exception as e:
@@ -34,6 +31,7 @@ def show_subpath(subpath):
         return error_response(403, "Access denied")
     
     if not os.path.isfile(safe_path):
-        return error_response(404, "file not found")
+        print("not found")
+        return response(ROOT + "/404.html", 404)
     
     return response(safe_path)

@@ -8,7 +8,6 @@ def ex_func(output, memory,start, lines):
         fun = FUNCS(start,lines)
         fun.code = code
     except Exception as e:
-
         return SimpreExceptionParser(e, output, start)
         
     return fun,eofun

@@ -10,9 +10,9 @@ class ExprParser:
         self.memory     = memory
         self.out        = out
 
-    def evalTokens(self, toks):
+    def evalTokens(self, toks , li = None):
         try:
-            return self._evalTokens(toks)
+            return self._evalTokens(toks, li)
         except Exception as e:
             line = None if isinstance(toks, list) else toks.data["line"]
             return SimpreExceptionParser(e, self.out, line)
@@ -91,7 +91,7 @@ class ExprParser:
         #* en el for se declaran en ese nuevo segmento las variables que se pasana como argumento
         for i,arg_name in enumerate(m_func.args):
             if isinstance(args[i], mem_Func | mem_Var):
-                newmem[arg_name] = args[i].copy()
+                newmem[arg_name]      = args[i].copy()
                 newmem[arg_name].name = arg_name
                 continue
         
@@ -115,10 +115,12 @@ class ExprParser:
         ret = Token(ret, GetType(ret))
         return ret 
 
-    def _evalTokens(self,ev_tokens):
+    def _evalTokens(self,ev_tokens, li):
         toks = ev_tokens.copy()
         if isinstance(toks, list):
             toks = Token(None, LINE , toks)
+            toks.put("line", li)
+
         nums    = []
         oper    = []
         unary   = True
@@ -130,7 +132,7 @@ class ExprParser:
                 for arg in toks.tokens[i].data["args"]:
                     if arg == []:
                         continue
-                    arg = self.evalTokens(arg)
+                    arg = self.evalTokens(arg, li)
                     args.append(arg)
                 try:
                     toks.tokens[i] = self.call(toks.tokens[i], args, self.memory)
@@ -153,7 +155,7 @@ class ExprParser:
                 if len(oper) == 0:
                     raise ExpresionException(toks)
                 while oper[-1].expr != "(":
-                    self.process(nums, oper)
+                    self.process(nums, oper, toks.get("line", None))
                 
                 oper.pop()
                 unary = False
@@ -176,7 +178,7 @@ class ExprParser:
                 nums.append(elem)
         
         while len(oper):
-            self.process(nums,oper)
+            self.process(nums,oper, toks.get("line", None))
 
         if len(nums) > 1 or len(oper)!=0:
             for i in nums:
@@ -188,7 +190,7 @@ class ExprParser:
         
         return nums[0].expr
 
-    def process(self, nums, oper):
+    def process(self, nums, oper , li = None):
         try:
             a = nums.pop()
             opp = oper.pop()
@@ -206,7 +208,9 @@ class ExprParser:
                 return
             nums.append(Token(n, GetType(n)))
         except Exception as e:
-            raise ExpresionException(None)
+            if isinstance(e, ZeroDivisionError):
+                raise ZeroDivisionException(li)
+            raise ExpresionException()
 
 class Evaluator:
     def __init__(self,structure:Token = None, start = None, output = None,memory = None, isfunc = False, parent = None):
@@ -289,7 +293,7 @@ class Evaluator:
                 return SimpreExceptionParser(e, self.out, line)
         elif line.tokens[0].expr == "ret":
             to_Eval = line.tokens[1:]
-            value = ExprParser(mem,self.out).evalTokens(to_Eval)        
+            value = ExprParser(mem,self.out).evalTokens(to_Eval, line.get("line",None))        
             return RETURNING,value   
         else:   
             return self.run_line(line, mem)
@@ -301,7 +305,7 @@ class Evaluator:
         cond = line.data["condition"]
 
         ev = ExprParser(mem, self.out)
-        while ev.evalTokens(cond):
+        while ev.evalTokens(cond, line.get("line",None)):
             eva = Evaluator(line.tokens, 0, self.out, mem.partialcopy(), False, self.Tree)
             code, ret = eva.run()
             if code == FINDING:
@@ -315,10 +319,10 @@ class Evaluator:
                                #* ya que la funcion en si es un token que se intenta evaluar
         try:
             try: #* esto es asi porque primero se intentan usar las variables globales en la linea
-                ExprParser(self.memory,self.out).evalTokens(toks=line)
+                ExprParser(self.memory,self.out).evalTokens(line, line.get("line",None))
             except InterpreterMemoryError as e:
                 print("global error: ",e)
-                ExprParser(mem,self.out).evalTokens(line)
+                ExprParser(mem,self.out).evalTokens(line,line.get("line",None))
         except InterpreterException as e:
             return SimpreExceptionParser(e, self.out, line)
         return EMPTY, None
@@ -338,7 +342,7 @@ class Evaluator:
 
     def execute_condition(self, line, mem:Memory):       
         cond = line.data["condition"]
-        value = ExprParser(mem,self.out).evalTokens(cond)
+        value = ExprParser(mem,self.out).evalTokens(cond,line.get("line",None))
         if not value:
             return EMPTY,None
         
@@ -358,7 +362,7 @@ class Evaluator:
                 if len(line.tokens) < 3 or line.tokens[1].type != VARIABLES or line.tokens[2].expr != "=":
                     raise DeclarationException(VARIABLES, line, [])
             
-                value = ExprParser( mem, self.out).evalTokens(line.tokens[3:])
+                value = ExprParser( mem, self.out).evalTokens(line.tokens[3:],line.get("line",None))
             
             except DeclarationException as e:
                 return SimpreExceptionParser(e, self.out, line)
