@@ -32,6 +32,12 @@ def ExecuteCode(code):
 
     elif isinstance(code, str):
         lines    = Lexer(code, output).TokenizeSource()
+
+        if debug.DEBUG:
+            for line in lines:
+                for tok in line.tokens:
+                    print(tok.expr , tok.type)
+
         s,struct = extract(output, memory, 0 , lines)
 
     if output["Errors"] == []:

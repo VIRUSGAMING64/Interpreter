@@ -94,7 +94,6 @@ class Lexer:
                 line_tokens.append(line)      
 
         return line_tokens
-
         
     def getErrs(self,  expr):
         expr = expr.split(' ')

@@ -12,9 +12,17 @@ class ExprParser:
 
     def evalTokens(self, toks , li = None):
         try:
-            return self._evalTokens(toks, li)
+            return self._evalTokens(toks.copy(), li)
         except Exception as e:
             line = None if isinstance(toks, list) else toks.data["line"]
+            if isinstance(e, ExpresionException) and debug.DEBUG:
+                print("eval line debug:")
+                try:
+                    toks = toks.tokens
+                except Exception as e:
+                    pass 
+                for tok in toks:
+                    print(tok.expr , tok.type)
             return SimpreExceptionParser(e, self.out, line)
             
     def funcat(self, i , tokens):
@@ -159,7 +167,9 @@ class ExprParser:
                 
                 oper.pop()
                 unary = False
-
+            elif elem.type & (STRING|NUMBER|ARRAY|BOLEAN): #! los array estan en TODO
+                unary = False
+                nums.append(elem)
             elif is_operator(elem.expr):
                 if unary and is_unary(elem.expr):
                     elem.data["neg"] = True
@@ -181,8 +191,9 @@ class ExprParser:
             self.process(nums,oper, toks.get("line", None))
 
         if len(nums) > 1 or len(oper)!=0:
-            for i in nums:
-                print(i.expr)
+            if debug.DEBUG:
+                for i in nums:
+                    print(i.expr)
             raise ExpresionException(toks)
         
         if len(nums) == 0:
@@ -210,7 +221,7 @@ class ExprParser:
         except Exception as e:
             if isinstance(e, ZeroDivisionError):
                 raise ZeroDivisionException(li)
-            raise ExpresionException()
+            raise ExpresionException(li)
 
 class Evaluator:
     def __init__(self,structure:Token = None, start = None, output = None,memory = None, isfunc = False, parent = None):
