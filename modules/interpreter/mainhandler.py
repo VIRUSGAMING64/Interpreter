@@ -41,8 +41,10 @@ def ExecuteCode(code):
         s,struct = extract(output, memory, 0 , lines)
 
     if output["Errors"] == []:
-        for i in struct.tokens:
-            print("debug:",i.expr, i.data.get("name", None))  
+        if debug.DEBUG:
+            for i in struct.tokens:
+                print("debug:",i.expr, i.data.get("name", None))  
+            
         code, res = Evaluator(struct, None, output, memory).run()
         
     logging.log(logging.DEBUG,memory.mem)

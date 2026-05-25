@@ -13,17 +13,17 @@ class ExprParser:
     def evalTokens(self, toks , li = None):
         try:
             return self._evalTokens(toks.copy(), li)
-        except Exception as e:
-            line = None if isinstance(toks, list) else toks.data["line"]
+        except ExpresionException as e:
+            print("printing:",e.line)
             if isinstance(e, ExpresionException) and debug.DEBUG:
                 print("eval line debug:")
                 try:
                     toks = toks.tokens
-                except Exception as e:
+                except Exception as err:
                     pass 
                 for tok in toks:
                     print(tok.expr , tok.type)
-            return SimpreExceptionParser(e, self.out, line)
+            return SimpreExceptionParser(e, self.out, li)
             
     def funcat(self, i , tokens):
         opens = 1
@@ -248,8 +248,9 @@ class Evaluator:
                 break
             if len(self.Tree.tokens) <= self.pos:
                 break
-            code, ret = self.step()
-            print("executed line:", self.pos)
+            code, ret = self.step()    
+            if debug.DEBUG:
+                print("executed line:", self.pos)
         if self.parent_node == None:
             self.out["result"] = debug.audit_memory(self.memory)
         return code, ret
@@ -318,6 +319,8 @@ class Evaluator:
         ev = ExprParser(mem, self.out)
         while ev.evalTokens(cond, line.get("line",None)):
             eva = Evaluator(line.tokens, 0, self.out, mem.partialcopy(), False, self.Tree)
+            if len(self.out["Errors"])!=0:
+                raise LoopException(line.get("line", None))
             code, ret = eva.run()
             if code == FINDING:
                 return self.find_label(line, ret)
@@ -384,12 +387,6 @@ class Evaluator:
                 return SimpreExceptionParser(e, self.out, line)
 
         except InterpreterException as e:
-            if isinstance(e, ArithmeticException):
-                return SimpreExceptionParser(e, self.out, line)
-            elif isinstance(e, InterpreterMemoryError):
-                return SimpreExceptionParser(e, self.out, line)
+            return SimpreExceptionParser(e, self.out, line)
             
-
-            self.out["Errors"].append(f"python exception at line [{line.data["line"]}]:[{str(e)}]")
-        
         return VARIABLES,None

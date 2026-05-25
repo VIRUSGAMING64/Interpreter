@@ -51,7 +51,7 @@ function changeto(name) {
 }
 
 function Console({tex}){
-    return <textarea readOnly={true} className="border-violet-950 w-full h-full flex-col bg-black" value={tex}></textarea>
+    return <pre readOnly={true} className="border-violet-950 w-full h-full flex-col bg-black overflow-scroll">{tex}</pre>
 }
 
 export default function App() {
@@ -138,10 +138,10 @@ export default function App() {
     }
 
     return(
-    <div className="w-full h-full absolute">   
-        <div className="p-4 h-3/5 w-full">
-            <div className="border-gray-900 border-2 rounded-full bg-black text-red-900 rw-full flex p-2 overflow-x-auto">
-                
+    <div className="w-full h-screen">   
+        <div className="p-4 h-3/5 w-full relative">
+            <div className="border-2 rounded-full bg-black border-gray-900 rw-full flex p-2 overflow-x-auto mb-3">
+
                 <Saves arr = {arr} func={changeto} ></Saves>
                 <div className="flex pr-2 items-center">
                     <Button onclick={addSaveWithPrompt} text="add"/>
@@ -149,11 +149,11 @@ export default function App() {
                 </div>
 
             </div>
-            <div className="h-full w-full">
+            <div className="w-full h-full mb-3 absolute overflow-scroll">
                 <textarea id="editor"></textarea>
             </div>
         </div>
-        <div className="border-3 border-gray-900 w-full h-full flex items-center justify-end p-4">
+        <div className="mt-30 border-3 border-gray-900 w-full h-full flex items-center justify-end p-4">
             <div className="flex pt-8 rounded-lg border-gray-950 m-4  w-full h-full">
                 <Console tex={consoleout}></Console>
                 <div>                

@@ -104,4 +104,4 @@ class ZeroDivisionException(InterpreterException):
         super().__init__(line, *args)
 
     def GetError(self):
-        return f"[Error zero division at {self.GetLine()}]"    
+        return f"Error zero division at line [{self.GetLine()}]"    

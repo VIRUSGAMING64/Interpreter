@@ -1,7 +1,8 @@
 
 from .Tokens import Token
+import os
 
-DEBUG = True
+DEBUG = bool(os.getenv("debug", False))
 
 def dst(structure:Token,prof = 0):
     print(prof * " ",end = "")

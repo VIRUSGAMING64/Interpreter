@@ -8,8 +8,6 @@ var a_src = process.argv[2], a_dst = process.argv[3];
 
 fs.mkdirSync(a_dst)
 
-
-
 function compile(str){
     return babel.transform(str, {"presets": ["@babel/preset-react"]}).code
 }
@@ -22,19 +20,15 @@ function dfs(src, dst){
         if(fs.statSync(elem).isDirectory()){
             fs.mkdirSync(t_dst)
             dfs(elem , t_dst)
-
         }else if(elem.endsWith(".jsx")){
-            
             var data = fs.readFileSync(elem)
             t_dst    = t_dst.replace(".jsx" , ".js")
             data     = compile(data)
             fs.writeFileSync(t_dst, data)
-
         }else{
             var data = fs.readFileSync(elem)
             fs.writeFileSync(t_dst, data)
         }
-
     }
 }
 
