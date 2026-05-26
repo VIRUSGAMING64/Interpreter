@@ -72,15 +72,15 @@ class ExprParser:
                 del tokens[i : eofc + 1]
                 tokens.insert(i, func)
 
-    def call(self, elem, args:list, mem:Memory):
-        m_func = mem.query(elem.data["name"])
+    def call(self, currline, args:list, mem:Memory):
+        m_func = mem.query(currline.data["name"])
         if m_func.type != FUNC:
             raise InterpreterMemoryError(f"No function at addr [{m_func.name}]")
 
         code = m_func.code      
 
         if len(m_func.args) != len(args):
-            raise CallFuncException(elem)
+            raise CallFuncException(currline)
         
 
         if code == BUILTIN:
