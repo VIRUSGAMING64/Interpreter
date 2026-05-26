@@ -1,6 +1,6 @@
 from modules.interpreter.Exceptions import *
 from modules.interpreter.statics_values import *
-import modules.interpreter.builtin as in_builtin
+import modules.interpreter.builtin.builtin as in_builtin
 
 class mem_Var:
     def __init__(self, name, value, isglob):

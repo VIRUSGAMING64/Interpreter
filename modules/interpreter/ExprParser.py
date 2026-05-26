@@ -223,6 +223,7 @@ class ExprParser:
                 raise ZeroDivisionException(li)
             raise ExpresionException(li)
 
+
 class Evaluator:
     def __init__(self,structure:Token = None, start = None, output = None,memory = None, isfunc = False, parent = None):
         self.pos         = start if start is not None else 0
@@ -390,3 +391,4 @@ class Evaluator:
             return SimpreExceptionParser(e, self.out, line)
             
         return VARIABLES,None
+
