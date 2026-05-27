@@ -2,11 +2,9 @@ import time
 from types import *
 import modules.interpreter.debug as debug
 
-
 shared_memory = {
 
 }
-
 
 def newmemory():
     key = hex(time.time_ns())
@@ -20,6 +18,12 @@ def memget(key, idx):
         return shared_memory[key][idx]
     except Exception as e:
         raise Exception("Unallocated memory address")
+
+def free(key):
+    try:
+        del shared_memory[key]
+    except:
+        raise Exception("Unallocated memory to delete")
 
 def malloc(key,size,value):
     try:
@@ -41,3 +45,8 @@ def memset(key, idx, value):
         if isinstance(e, KeyError):
             raise Exception("Key not found")
         raise e
+
+import json
+
+def dumpshared():
+    return str(shared_memory)

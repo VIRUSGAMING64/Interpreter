@@ -59,20 +59,28 @@ __builtins_funcs__ = [
     ],
     [
         "dbg", ["a"]
+    ],
+    [
+        "dumpshared", []
+    ],
+    [
+        "free",["key"]
     ]
 ]
 
 __builtins_calls__ = {
-    "_time"    : _time,
-    "_getcwd"  : _getcwd,
-    "_sleep"   : _sleep,
-    "_random"  : _random,
-    "strcmp"   : strcmp,
-    "newstr"   : newstr,
-    "strcp"    : strcp,
-    "isS1inS2" : isS1inS2,
-    "malloc"   : malloc,
-    "newmemory": newmemory,
-    "memset"   : memset,
-    "memget"   : memget
+    "_time"     : _time,
+    "_getcwd"   : _getcwd,
+    "_sleep"    : _sleep,
+    "_random"   : _random,
+    "strcmp"    : strcmp,
+    "newstr"    : newstr,
+    "strcp"     : strcp,
+    "isS1inS2"  : isS1inS2,
+    "malloc"    : malloc,
+    "newmemory" : newmemory,
+    "memset"    : memset,
+    "memget"    : memget,
+    "dumpshared": dumpshared,
+    "free"      : free
 }
