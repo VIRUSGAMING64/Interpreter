@@ -80,6 +80,8 @@ class ExprParser:
         code = m_func.code      
 
         if len(m_func.args) != len(args):
+            if debug.DEBUG:
+                print(m_func.args, args)
             raise CallFuncException(currline)
         
 
