@@ -1,6 +1,8 @@
 print("================ loading modules ==============")
 from modules import *
 import sys
+import dotenv
+dotenv.load_dotenv()
 sys.setrecursionlimit(2 ** 30)
 sys.set_int_max_str_digits(2 ** 30)
 print("================ modules loadeds ==============")

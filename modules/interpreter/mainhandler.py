@@ -22,8 +22,8 @@ def ExecuteCode(code):
 
     output = {
         "Errors": [],
-        "result":""
-        }
+        "result": ""
+    }
 
     struct = None
 

@@ -1,3 +1,4 @@
+import uuid
 import time
 from types import *
 import modules.interpreter.debug as debug
@@ -7,7 +8,7 @@ shared_memory = {
 }
 
 def newmemory():
-    key = hex(time.time_ns())
+    key = uuid.uuid1().int
     shared_memory[key] = {}
     return  key
 
@@ -27,7 +28,7 @@ def free(key):
 
 def malloc(key,size,value):
     try:
-        if not isinstance(key , str):
+        if not isinstance(key , int):
             raise Exception("Key not found")
         for i in range(size):
             shared_memory[key][i] = value
@@ -45,8 +46,6 @@ def memset(key, idx, value):
         if isinstance(e, KeyError):
             raise Exception("Key not found")
         raise e
-
-import json
 
 def dumpshared():
     return str(shared_memory)

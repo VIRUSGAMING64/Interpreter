@@ -56,27 +56,17 @@ class Lexer:
                 if p: 
                     pos += 1
                     continue
-            
-                t_token = tokens[len(tokens) + dis]
-                le = len(t_token.expr)
                 
+                t_token:Token = tokens[len(tokens) + dis]
+                le = len(t_token.expr)
                 t_token.data["name"] = t_token.expr
+                t_token.type |= t_token.isKeyword() | \
+                               t_token.isLabel()   | \
+                               t_token.IsString()  | \
+                               t_token.VarName()   | \
+                               t_token.isOperator()| \
+                               t_token.IsNumeric()
 
-                if t_token.expr.isnumeric():
-                    t_token.type = NUMBER
-                    t_token.expr = int(t_token.expr)
-                elif t_token.expr.startswith("\"") and t_token.expr.endswith("\"") and le > 1:
-                    t_token.type = STRING
-                    t_token.expr = t_token.expr.removeprefix("\"").removesuffix("\"")
-                elif t_token.expr.startswith("'") and t_token.expr.endswith("'") and le > 1:
-                    t_token.type = STRING
-                    t_token.expr = t_token.expr.removeprefix("\'").removesuffix("\'")
-                elif t_token.isKeyword():
-                    t_token.type = KEYWORD
-                elif t_token.isLabel():
-                    t_token.type = LABEL
-                elif t_token.VarName():
-                    t_token.type = VARIABLES            
                 act_tok = ""
             pos += 1
             
@@ -135,7 +125,7 @@ class Lexer:
                 del t_line.tokens[j+1:]
                 break
 
-            if t_line.tokens[j].type == KEYWORD and j != 0:
+            if t_line.tokens[j].type & KEYWORD and j != 0:
                 self.output["Errors"].append(f"keyword not in the start of line [{p}]")
                 break
                 

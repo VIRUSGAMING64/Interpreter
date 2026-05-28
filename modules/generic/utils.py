@@ -44,7 +44,7 @@ una = {
 def asign(a, b, mem):
     a.expr = b.expr
     mem.Put(a.data["name"], a.expr)
-
+    
 def UnaryOP(a,op):
     return una[op.expr](a)
 

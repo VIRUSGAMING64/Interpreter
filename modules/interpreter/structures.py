@@ -36,7 +36,7 @@ class FUNCS:
             raise DeclarationException(FUNC, self.i)
         toks = self.decl.tokens
         novars = []
-        if toks[1].type != VARIABLES or toks[2].expr != "(":
+        if (toks[1].type & VARIABLES == 0) or toks[2].expr != "(":
             raise DeclarationException(FUNC, self.i)
         
         for pointer in range(3, len(toks), 2):
@@ -49,7 +49,7 @@ class FUNCS:
                         break
                     raise DeclarationException(FUNC, self.i)
                 
-                if var.type != VARIABLES:
+                if (var.type & VARIABLES)==0:
                     raise DeclarationException(FUNC, self.i)      
                 
                 novars.append(var.expr)      

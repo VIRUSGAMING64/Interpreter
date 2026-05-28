@@ -41,6 +41,7 @@ function init() {
         }
     }, 1000)
 }
+
 setTimeout(init, 1000)
 
 function changeto(name) {

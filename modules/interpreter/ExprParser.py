@@ -57,7 +57,7 @@ class ExprParser:
         for i in range(len(tokens)):
             if i + 1 >= len(tokens):
                 break
-            if tokens[i].type == VARIABLES and tokens[i + 1].expr == "(":
+            if (tokens[i].type & VARIABLES) and tokens[i + 1].expr == "(":
                 name = tokens[i].data["name"]
                 fu = mem.query(name)
                 if not isinstance(fu, mem_Func):
@@ -74,7 +74,7 @@ class ExprParser:
 
     def call(self, currline, args:list, mem:Memory):
         m_func = mem.query(currline.data["name"])
-        if m_func.type != FUNC:
+        if (m_func.type & FUNC) == 0:
             raise InterpreterMemoryError(f"No function at addr [{m_func.name}]")
 
         code = m_func.code      
@@ -137,7 +137,7 @@ class ExprParser:
         self.extract_funcs_call(toks, self.memory)
 
         for i in range(len(toks.tokens)):
-            if toks.tokens[i].type == FUNCCALL:
+            if toks.tokens[i].type & FUNCCALL:
                 args = []
                 for arg in toks.tokens[i].data["args"]:
                     if arg == []:
@@ -151,10 +151,10 @@ class ExprParser:
                     return 0
                 
         for elem in toks.tokens:
-            if elem.type == COMMENT:
+            if elem.type & COMMENT:
                 continue
             
-            if elem.type == VARIABLES:
+            if elem.type & VARIABLES:
                 elem.expr = self.memory.query(elem.data["name"])
             
             if elem.expr == "(":
@@ -221,9 +221,7 @@ class ExprParser:
                 return
             nums.append(Token(n, GetType(n)))
         except Exception as e:
-            if isinstance(e, ZeroDivisionError):
-                raise ZeroDivisionException(li)
-            raise ExpresionException(li)
+            raise e
 
 
 class Evaluator:
@@ -280,7 +278,7 @@ class Evaluator:
         if line.tokens[0] == "end":
             return
 
-        if line.type == CONDITION:
+        if line.type & CONDITION:
             return self.execute_condition(line, mem)
         elif line.tokens[0].expr == 'var':
             try:
@@ -288,7 +286,7 @@ class Evaluator:
             except DeclarationException as e:
                 self.out["Errors"].append(e.GetError())
         
-        elif line.tokens[0].type == LABEL:
+        elif line.tokens[0].type & LABEL:
             return EMPTY,None
         
         elif line.tokens[0].expr == "goto":
@@ -301,7 +299,7 @@ class Evaluator:
                 return self.find_label(line, lab)
             except GotoException as e:
                 self.out["Errors"].append(e.GetError())
-        elif line.type == LOOP:
+        elif line.type & LOOP:
             try:
                 return self.eval_loop(line, mem)
             except LoopException as e:
@@ -331,7 +329,7 @@ class Evaluator:
         return EMPTY, None
 
     def run_line(self, line , mem):
-        if line.type ==  FUNC:
+        if line.type &  FUNC:
             return EMPTY, None #* esto es para no evaluar las declaraciones de funciones 
                                #* ya que la funcion en si es un token que se intenta evaluar
         try:
@@ -376,7 +374,7 @@ class Evaluator:
     def variable_declaration(self, line, mem:Memory):
         try:
             try:
-                if len(line.tokens) < 3 or line.tokens[1].type != VARIABLES or line.tokens[2].expr != "=":
+                if len(line.tokens) < 3 or ((line.tokens[1].type & VARIABLES) == 0) or line.tokens[2].expr != "=":
                     raise DeclarationException(VARIABLES, line, [])
             
                 value = ExprParser( mem, self.out).evalTokens(line.tokens[3:],line.get("line",None))

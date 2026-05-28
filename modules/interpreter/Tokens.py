@@ -42,10 +42,10 @@ class Token:
         self.data[key] = data
 
     def isKeyword(self):
-        return self.expr in keywords
+        return KEYWORD if self.expr in keywords else 0
     
     def isOperator(self):
-        return self.expr in operators
+        return OPERATION if self.expr in operators else 0
     
     def VarName(self):
         alphas = ""
@@ -53,16 +53,33 @@ class Token:
             if i.isalnum():
                 alphas+=i
             elif i != "_":
-                return False
-            
+                return INVALID
+        
+        if(alphas[0].isnumeric()):
+            return INVALID
+
         if len(alphas) >= 1:
-            return True
+            return VARIABLES
         
         print(alphas)
-        return False
+        return INVALID
+    
+    def IsNumeric(self):
+        if self.expr.isnumeric():
+            self.expr = int(self.expr)
+            return NUMBER
+        return INVALID
+    
+    def IsString(self,sep = None) -> int:
+        if(sep == None):
+            return self.IsString("'") | self.IsString('"')
+        if self.expr.startswith(sep) and self.expr.endswith(sep) and len(self.expr) > 1:
+            self.expr = self.expr.removeprefix(sep).removesuffix(sep)
+            return STRING
+        return INVALID
     
     def isLabel(self):
-        return True if self.expr.endswith(":") else False
+        return LABEL if self.expr.endswith(":") else 0
     
     def math(self, token):
         if token.expr in maths[self.expr]:

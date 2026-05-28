@@ -58,7 +58,7 @@ class DeclarationException(InterpreterException):
 
     def GetError(self):
         err = f"INVALID DECLARATION AT LINE [{self.line}]"
-        if self.type == FUNC:
+        if self.type & FUNC:
             err = f"Invalid function declaration at line [{self.line}]"
         return err
     
