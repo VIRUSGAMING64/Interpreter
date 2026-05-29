@@ -1,9 +1,9 @@
 from modules.interpreter.Exceptions import *
-from modules.interpreter.statics_values import *
+from modules.interpreter.auxiliar.statics_values import *
 from modules.interpreter.Tokens import Token
 from modules.generic.utils import *
 import modules.interpreter.debug as debug
-from modules.interpreter.memory import *
+from modules.interpreter.memory.memory import *
 
 class ExprParser:
     def __init__(self, memory:Memory, out):
@@ -14,8 +14,8 @@ class ExprParser:
         try:
             return self._evalTokens(toks.copy(), li)
         except ExpresionException as e:
-            print("printing:",e.line)
             if isinstance(e, ExpresionException) and debug.DEBUG:
+                print("printing:",e.line)
                 print("eval line debug:")
                 try:
                     toks = toks.tokens
@@ -23,6 +23,7 @@ class ExprParser:
                     pass 
                 for tok in toks:
                     print(tok.expr , tok.type)
+                    
             return SimpreExceptionParser(e, self.out, li)
             
     def funcat(self, i , tokens):

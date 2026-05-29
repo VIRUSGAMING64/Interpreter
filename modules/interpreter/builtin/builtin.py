@@ -2,7 +2,7 @@ import os
 from math import *
 import time as pytime
 import random
-from .Sharedmem import *
+from ..memory.Sharedmem import *
 from .strings import *
 """
 source of __builtin__ functions

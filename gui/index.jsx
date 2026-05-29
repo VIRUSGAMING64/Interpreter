@@ -147,7 +147,7 @@ export default function App() {
 
     return(
     <div className="w-full h-screen">   
-        <div className="p-4 h-3/5 w-full relative">
+        <div className="p-4 h-4/5 w-full relative">
             <div className="border-2 rounded-full bg-black border-gray-900 rw-full flex p-2 overflow-x-auto mb-3">
 
                 <Saves arr = {arr} func={changeto} ></Saves>

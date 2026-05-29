@@ -1,5 +1,5 @@
 from modules.interpreter.Exceptions import *
-from modules.interpreter.statics_values import *
+from modules.interpreter.auxiliar.statics_values import *
 import modules.interpreter.builtin.builtin as in_builtin
 
 class mem_Var:

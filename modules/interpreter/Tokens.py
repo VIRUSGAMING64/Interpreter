@@ -1,5 +1,5 @@
 from modules.generic.utils import *
-from modules.interpreter.statics_values import *
+from modules.interpreter.auxiliar.statics_values import *
 import functools
 
 class Token:

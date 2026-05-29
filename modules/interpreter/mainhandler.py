@@ -7,7 +7,7 @@ import os
 from .structures import *
 import logging
 import threading as th
-from modules.interpreter.utils import *
+from modules.interpreter.auxiliar.utils import *
 
 mtx = th.Lock()
 RunningInstances : list[InterpreterInstance]= []

@@ -1,6 +1,6 @@
 from modules.interpreter.Tokens import *
 from modules.generic.utils import *
-from modules.interpreter.memory import *
+from modules.interpreter.memory.memory import *
 from modules.interpreter.Exceptions import *
 import time
 

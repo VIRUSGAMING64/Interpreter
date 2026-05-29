@@ -1,6 +1,6 @@
 
 import logging
-from .statics_values import *
+from .auxiliar.statics_values import *
 
 def SimpreExceptionParser(e, out, line):
     e.line = line
