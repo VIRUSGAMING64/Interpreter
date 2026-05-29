@@ -161,7 +161,7 @@ export default function App() {
                 <textarea id="editor"></textarea>
             </div>
         </div>
-        <div className="mt-30 border-3 border-gray-900 w-full h-full flex items-center justify-end p-4">
+        <div className="mt-25 border-3 border-gray-900 w-full h-full flex items-center justify-end p-4">
             <div className="flex pt-8 rounded-lg border-gray-950 m-4  w-full h-full">
                 <Console tex={consoleout}></Console>
                 <div className="flex">                

@@ -23,10 +23,14 @@ class ExprParser:
                     pass 
                 for tok in toks:
                     print(tok.expr , tok.type)
-                    
+
             return SimpreExceptionParser(e, self.out, li)
             
     def funcat(self, i , tokens):
+        """
+        Se recorre la expression y se va haciendo splists segun aparezcan ","
+        hasta llegar al cierre de la funcion
+        """
         opens = 1
         args = []
         arg = []
@@ -51,9 +55,16 @@ class ExprParser:
                 args.append(arg)
                 return j,args
         
-        raise CallFuncException(i, "Not closed function call !!")
+        raise CallFuncException(i, "Not closed function call !!")#* La cantidad de "(" > ")" entonces faltan ) para algunos ( 
+    
 
     def extract_funcs_call(self,toks, mem:Memory):
+        """
+        Esta funcion recorre la expression y si se encuentra con la estructura:
+        "variables + (" es decir hay una posibles llamada a una funcion
+        en caso de no ser una variable funcion en memoria es un error y se reporta
+        luego se estraen los argumentos con funcat
+        """
         tokens:list = toks.tokens
         for i in range(len(tokens)):
             if i + 1 >= len(tokens):
@@ -85,8 +96,9 @@ class ExprParser:
                 print(m_func.args, args)
             raise CallFuncException(currline)
         
-
         if code == BUILTIN:
+            #* Aqui chequeo si la llamada a la funcion es de una builtin
+            #* (funciones implementadas en python para el lang)
             name = m_func.name
             try:
                 ret = in_builtin.__builtins_calls__[name](*args)
@@ -223,8 +235,7 @@ class ExprParser:
             nums.append(Token(n, GetType(n)))
         except Exception as e:
             raise e
-
-
+        
 class Evaluator:
     def __init__(self,structure:Token = None, start = None, output = None,memory = None, isfunc = False, parent = None):
         self.pos         = start if start is not None else 0
@@ -397,4 +408,3 @@ class Evaluator:
             return SimpreExceptionParser(e, self.out, line)
             
         return VARIABLES,None
-

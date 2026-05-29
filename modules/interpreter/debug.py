@@ -3,7 +3,7 @@ from .Tokens import Token
 import os
 
 DEBUG = bool(os.getenv("DEBUG", False))
-
+print("debug: ",DEBUG)
 def dst(structure:Token,prof = 0):
     print(prof * " ",end = "")
     print(structure.expr)
