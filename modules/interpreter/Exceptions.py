@@ -19,10 +19,10 @@ class InterpreterException(Exception):
     def GetLine(self):
         if self.line == None:
             return "UNKNOW"
-        if isinstance(self.line , int):
+        if isinstance(self.line , int | str):
             return self.line
         self.line = self.line.data.get("line", None)
-        return self.line
+        return self.GetLine()
 
 class BuiltinException(InterpreterException):
     def __init__(self, base, line=None, *args):
@@ -83,7 +83,16 @@ class CallFuncException(InterpreterException):
         super().__init__(line, *args)
 
     def GetError(self):
+        self.GetLine()
         return f"function call exception[{self.line}]"
+
+class CallNonFuncException(InterpreterException):
+    def __init__(self, line, *args):
+        super().__init__(line, *args)
+
+    def GetError(self):
+        self.GetLine()
+        return f"non function called exception[{self.line}]"
 
 class ExpresionException(InterpreterException):
     def __init__(self, line, *args):

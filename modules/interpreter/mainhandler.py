@@ -6,48 +6,88 @@ import modules.interpreter.debug as debug
 import os
 from .structures import *
 import logging
+import threading as th
 from modules.interpreter.utils import *
 
-def ExecuteCode(code):
-    if not isinstance(code, str | dict):
-        return {
-            "Errors": ["code is invalid"],
-            "result": ""
+mtx = th.Lock()
+RunningInstances : list[InterpreterInstance]= []
+
+
+
+class InterpreterInstance():
+    def __init__(self):
+        self.output = {}
+
+    def ExecuteCode(self,code):
+        if not isinstance(code, str | dict):
+            return {
+                "Errors": ["code is invalid"],
+                "result": ""
+            }
+
+        if code == "":
+            return {"Errors": [], "result":""}
+
+        memory = Memory()
+
+        self.output = {
+            "Errors": [],
+            "result": "",
+            "running": True
         }
 
-    if code == "":
-        return {"Errors": [], "result":""}
+        struct = None
 
-    memory = Memory()
+        if isinstance(code,dict):
+            struct = dict2Token(code)
 
-    output = {
-        "Errors": [],
-        "result": ""
-    }
+        elif isinstance(code, str):
+            lines    = Lexer(code, self.output).TokenizeSource()
 
-    struct = None
+            if debug.DEBUG:
+                for line in lines:
+                    for tok in line.tokens:
+                        print(tok.expr , tok.type)
 
-    if isinstance(code,dict):
-        struct = dict2Token(code)
+            s,struct = extract(self.output, memory, 0 , lines)
 
-    elif isinstance(code, str):
-        lines    = Lexer(code, output).TokenizeSource()
-
-        if debug.DEBUG:
-            for line in lines:
-                for tok in line.tokens:
-                    print(tok.expr , tok.type)
-
-        s,struct = extract(output, memory, 0 , lines)
-
-    if output["Errors"] == []:
-        if debug.DEBUG:
-            for i in struct.tokens:
-                print("debug:",i.expr, i.data.get("name", None))  
-            
-        code, res = Evaluator(struct, None, output, memory).run()
+        if self.output["Errors"] == []:
+            if debug.DEBUG:
+                for i in struct.tokens:
+                    print("debug:",i.expr, i.data.get("name", None))  
+                
+            code, res = Evaluator(struct, None, self.output, memory).run()
         
-    logging.log(logging.DEBUG,memory.mem)
+        self.output["running"] = False
+        logging.log(logging.DEBUG,memory.mem)
 
+        return self.output
 
-    return output
+    def kill(self):
+        self.output["Killed"] = True
+
+def Kill():
+    outs = []
+
+    for ins in RunningInstances:
+        ins.kill()
+
+    for ins in RunningInstances:
+        while ins.output["running"]:
+            time.sleep(0.100)
+        outs.append(ins.output)
+
+    return {"stoped":True, "outputs": outs} #* No se usa en el frontend esta por si luego hace falta
+                                            #* Es innecesario ya que al running coge el output del hilo cerrado  
+
+def ExecuteCode(code):
+    mtx.acquire()
+    id = len(RunningInstances)
+    RunningInstances.append(InterpreterInstance())
+    mtx.release()
+    out = RunningInstances[id].ExecuteCode(code) 
+    mtx.acquire()
+    RunningInstances.pop(id)
+    mtx.release()   
+    return out
+    

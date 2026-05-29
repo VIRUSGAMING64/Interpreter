@@ -61,7 +61,7 @@ class ExprParser:
                 name = tokens[i].data["name"]
                 fu = mem.query(name)
                 if not isinstance(fu, mem_Func):
-                    raise CallFuncException(-1,"Error calling non function")
+                    raise CallNonFuncException(toks)
                 
                 eofc,args = self.funcat(i,tokens)
                 func = Token("__func__", FUNCCALL, []) 
@@ -243,6 +243,11 @@ class Evaluator:
     def run(self):
         code, ret   = self.step()
         while code != RETURNING:
+            if self.out.get("Killed", False):
+                code = FINAL
+                ret  = INVALID-1
+                break 
+
             if code == FINDING:
                 return FINDING, ret
             if len(self.out['Errors']) >= 1:
@@ -264,7 +269,7 @@ class Evaluator:
             if retcode != JUMPED:
                 self.pos += 1
             if self.pos >= len(self.Tree.tokens):
-                return FINAL, 0 #! valor dafault para retorno de una funcion
+                return FINAL, 0 #* valor dafault para retorno de una funcion
             elif retcode == RETURNING:
                 return retcode,out
         except InterpreterMemoryError as e:

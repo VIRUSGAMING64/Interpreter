@@ -48,6 +48,8 @@ class Token:
         return OPERATION if self.expr in operators else 0
     
     def VarName(self):
+        if self.isKeyword():
+            return 0
         alphas = ""
         for i in self.expr:
             if i.isalnum():

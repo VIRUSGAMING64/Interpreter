@@ -60,8 +60,13 @@ export default function App() {
     console.log("update...")
     
     var [arr, IdAdder] = React.useState([])
-    var [consoleout, editcosole] = React.useState("Console")
+    var [consoleout, editconsole] = React.useState("Console")
     outputChanger = IdAdder
+
+    function KillRunningProcess(){
+        editconsole("Wait while end current intruction")
+        api.killRunning().then((data)=>{})
+    }
 
     function addSaveWithPrompt(){
         var name = prompt("Nombre:")
@@ -86,13 +91,13 @@ export default function App() {
 
     function deletecurrent(){
         if (!Current){
-            editcosole("No hay archivo seleccionado")
+            editconsole("No hay archivo seleccionado")
             return
         }
 
         api.delcode(Current).then((res)=>{
             if (!res || res["status"] !== "ok"){
-                editcosole("No se pudo eliminar el archivo")
+                editconsole("No se pudo eliminar el archivo")
                 return
             }
 
@@ -111,19 +116,21 @@ export default function App() {
                 }
             }
 
-            editcosole("Eliminado: " + removedName)
+            editconsole("Eliminado: " + removedName)
         })
     }
 
     function run(){
         if (!Current){
-            editcosole("No hay archivo seleccionado")
+            editconsole("No hay archivo seleccionado")
             return
+        }else{
+            editconsole("Code running...")
         }
 
         api.run(Current, editor.getValue()).then((dato)=>{
             if (!dato){
-                editcosole((dato && dato["message"]) ? dato["message"] : "Error al ejecutar")
+                editconsole((dato && dato["message"]) ? dato["message"] : "Error al ejecutar")
                 return
             }
 
@@ -134,7 +141,7 @@ export default function App() {
             }
             console.log(dato)
             console.log(mesg)
-            editcosole(mesg)
+            editconsole(mesg)
         })
     }
 
@@ -157,7 +164,8 @@ export default function App() {
         <div className="mt-30 border-3 border-gray-900 w-full h-full flex items-center justify-end p-4">
             <div className="flex pt-8 rounded-lg border-gray-950 m-4  w-full h-full">
                 <Console tex={consoleout}></Console>
-                <div>                
+                <div className="flex">                
+                    <Button onclick={KillRunningProcess} text="close"/>
                     <Button onclick={run} text="play_arrow"/>
                 </div>
             </div>

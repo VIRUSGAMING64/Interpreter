@@ -116,3 +116,8 @@ def delcode():
         return {"status":"fail"}, 405
 
     return {"status":"ok"} , 200
+
+@app.route("/api/kill")
+def kill():
+    data = interpreter.Kill()
+    return data , 200

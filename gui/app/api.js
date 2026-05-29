@@ -5,11 +5,18 @@ class API{
         this.base = "/api/"
     }
 
+
+    async killRunning(){
+        return this.fetchapi("kill")
+
+    }
+
     async fetchapi(url){
         var res=await fetch(this.base + url)
         var json = await res.json()
         return json
     }
+
     async getcode(name){
         var data = await this.fetchapi("getcode?name="+name)
         console.log(data)
