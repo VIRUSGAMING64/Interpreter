@@ -60,12 +60,16 @@ class Lexer:
                 t_token:Token = tokens[len(tokens) + dis]
                 le = len(t_token.expr)
                 t_token.data["name"] = t_token.expr
-                t_token.type |= t_token.isKeyword() | \
+                t_token.type|= t_token.isKeyword() | \
                                t_token.isLabel()   | \
-                               t_token.IsString()  | \
                                t_token.VarName()   | \
                                t_token.isOperator()| \
-                               t_token.IsNumeric()
+                               t_token.IsNumeric() | \
+                               t_token.IsString()  
+                """
+                Is numeric & Is string van al final porque modifican el contenido de self.expr 
+                Is numeric primero porque si expr == "213" ret 0 and if isstring primero expr => 213 entonces numeric retorna valor
+                """
 
                 act_tok = ""
             pos += 1

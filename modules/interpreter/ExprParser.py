@@ -138,16 +138,7 @@ class ExprParser:
         ret = Token(ret, GetType(ret))
         return ret 
 
-    def _evalTokens(self,ev_tokens, li):
-        toks = ev_tokens.copy()
-        if isinstance(toks, list):
-            toks = Token(None, LINE , toks)
-            toks.put("line", li)
-
-        nums    = []
-        oper    = []
-        unary   = True
-        self.extract_funcs_call(toks, self.memory)
+    def callfuncs(self, toks, li):
 
         for i in range(len(toks.tokens)):
             if toks.tokens[i].type & FUNCCALL:
@@ -163,23 +154,46 @@ class ExprParser:
                     self.out["Errors"].append(f"Invalid argument type at line {toks.data.get("line", "unknow")}")
                     return 0
                 
-        for elem in toks.tokens:
+    def extract_arrays(self, toks: Token):
+        li = toks.get("line")
+        toks = toks.tokens
+        for tok, i in enumerate(toks):
+            if (tok.type & ARRAY) == 0:
+                continue
+            if (tok.type & ARRAY) and toks[i + 1].expr != "[":
+                raise InterpreterException(li,"Invalid array seek position")
+
+    def _evalTokens(self,ev_tokens, li):
+        toks = ev_tokens.copy()
+        if isinstance(toks, list):
+            toks = Token(None, LINE , toks)
+            toks.put("line", li)
+
+        nums    = []
+        oper    = []
+        unary   = True
+
+        self.extract_funcs_call(toks, self.memory)
+        self.callfuncs(toks, li)
+        #self.extract_arrays(toks)
+
+        for lineidx, elem in enumerate(toks.tokens):
             if elem.type & COMMENT:
                 continue
-            
+
             if elem.type & VARIABLES:
                 elem.expr = self.memory.query(elem.data["name"])
             
             if elem.expr == "(":
                 oper.append(elem)
                 unary = True
-            
+        
             elif elem.expr == ")":
                 if len(oper) == 0:
                     raise ExpresionException(toks)
                 while oper[-1].expr != "(":
                     self.process(nums, oper, toks.get("line", None))
-                
+
                 oper.pop()
                 unary = False
             elif elem.type & (STRING|NUMBER|ARRAY|BOLEAN): #! los array estan en TODO

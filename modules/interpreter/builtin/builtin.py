@@ -49,6 +49,9 @@ __builtins_funcs__ = [
         "newstr", []
     ],
     [
+        "isS1inS2", ["a", "b"]
+    ],
+    [
         "strcp", ["Str1","Str2"]
     ],
     [
@@ -82,5 +85,6 @@ __builtins_calls__ = {
     "memset"    : memset,
     "memget"    : memget,
     "dumpshared": dumpshared,
-    "free"      : free
+    "free"      : free,
+    "dbg"       : dbg
 }
