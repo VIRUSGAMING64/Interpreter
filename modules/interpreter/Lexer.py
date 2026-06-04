@@ -49,7 +49,7 @@ class Lexer:
 
                 if dis == -2:
                     tokens.append(Token(expr[pos], OPERATION))
-                    if pos + 1 != len(expr) and expr[pos] + expr[pos + 1] in operators:
+                    while pos + 1 != len(expr) and expr[pos] + expr[pos + 1] in operators:
                         tokens[len(tokens) - 1].expr += expr[pos + 1]
                         pos += 1
             
@@ -60,12 +60,12 @@ class Lexer:
                 t_token:Token = tokens[len(tokens) + dis]
                 le = len(t_token.expr)
                 t_token.data["name"] = t_token.expr
-                t_token.type|= t_token.isKeyword() | \
-                               t_token.isLabel()   | \
-                               t_token.VarName()   | \
-                               t_token.isOperator()| \
-                               t_token.IsNumeric() | \
-                               t_token.IsString()  
+                t_token.isKeyword()
+                t_token.isLabel()   
+                t_token.VarName()   
+                t_token.isOperator()
+                t_token.IsNumeric() 
+                t_token.IsString()  
                 """
                 Is numeric & Is string van al final porque modifican el contenido de self.expr 
                 Is numeric primero porque si expr == "213" ret 0 and if isstring primero expr => 213 entonces numeric retorna valor
@@ -113,7 +113,6 @@ class Lexer:
             lines.append(li)
 
         return lines
-
 
     def ProcessRawLine(self, line, p):
         if line == "": 

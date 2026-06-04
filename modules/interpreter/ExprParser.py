@@ -60,10 +60,10 @@ class ExprParser:
 
     def extract_funcs_call(self,toks, mem:Memory):
         """
-        Esta funcion recorre la expression y si se encuentra con la estructura:
-        "variables + (" es decir hay una posibles llamada a una funcion
-        en caso de no ser una variable funcion en memoria es un error y se reporta
-        luego se estraen los argumentos con funcat
+        *Esta funcion recorre la expression y si se encuentra con la estructura:
+        *"variables + (" es decir hay una posibles llamada a una funcion
+        *en caso de no ser una variable funcion en memoria es un error y se reporta
+        *luego se extraen los argumentos con funcat
         """
         tokens:list = toks.tokens
         for i in range(len(tokens)):
@@ -139,7 +139,6 @@ class ExprParser:
         return ret 
 
     def callfuncs(self, toks, li):
-
         for i in range(len(toks.tokens)):
             if toks.tokens[i].type & FUNCCALL:
                 args = []
@@ -153,11 +152,11 @@ class ExprParser:
                 except TypeError as e:
                     self.out["Errors"].append(f"Invalid argument type at line {toks.data.get("line", "unknow")}")
                     return 0
-                
+
     def extract_arrays(self, toks: Token):
-        li = toks.get("line")
+        li = toks.get("line", None)
         toks = toks.tokens
-        for tok, i in enumerate(toks):
+        for i,tok in enumerate(toks):
             if (tok.type & ARRAY) == 0:
                 continue
             if (tok.type & ARRAY) and toks[i + 1].expr != "[":
@@ -175,7 +174,7 @@ class ExprParser:
 
         self.extract_funcs_call(toks, self.memory)
         self.callfuncs(toks, li)
-        #self.extract_arrays(toks)
+        self.extract_arrays(toks)
 
         for lineidx, elem in enumerate(toks.tokens):
             if elem.type & COMMENT:
@@ -248,6 +247,10 @@ class ExprParser:
                 return
             nums.append(Token(n, GetType(n)))
         except Exception as e:
+            if isinstance(e, IndexError):
+                raise ExpresionException(li)
+            if isinstance(e , ZeroDivisionError):
+                raise ZeroDivisionException(li)
             raise e
         
 class Evaluator:

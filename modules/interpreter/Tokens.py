@@ -42,48 +42,69 @@ class Token:
         self.data[key] = data
 
     def isKeyword(self):
-        return KEYWORD if self.expr in keywords else 0
+        if self.type != NIL:
+            return self.type
+
+        if self.expr in keywords:
+            self.type=KEYWORD
+
+        return self.type
     
     def isOperator(self):
-        return OPERATION if self.expr in operators else 0
+        if self.type != NIL:
+            return self.type
+        self.type = OPERATION if self.expr in operators else NIL
+        return self.type
     
     def VarName(self):
-        if self.isKeyword():
-            return 0
+        
+        if self.type != NIL:
+            return self.type
+
         alphas = ""
         for i in self.expr:
             if i.isalnum():
                 alphas+=i
             elif i != "_":
-                return INVALID
+                return NIL
         
         if(alphas[0].isnumeric()):
-            return INVALID
+            return NIL
 
         if len(alphas) >= 1:
+            self.type = VARIABLES
             return VARIABLES
         
         print(alphas)
-        return INVALID
+        return NIL
     
     def IsNumeric(self):
+        if (self.type != NIL):
+            return
         if self.expr.isnumeric():
             self.expr = int(self.expr)
+            self.type= NUMBER
             return NUMBER
-        return INVALID
+        return NIL
     
     def IsString(self,sep = None) -> int:
+        if self.type != NIL:
+            return self.type
         if(sep == None):
             return self.IsString("'") | self.IsString('"')
         if self.expr.startswith(sep) and self.expr.endswith(sep) and len(self.expr) > 1:
             self.expr = self.expr.removeprefix(sep).removesuffix(sep)
+            self.type = STRING
             return STRING
-        return INVALID
+        return NIL
     
     def isLabel(self):
-        return LABEL if self.expr.endswith(":") else 0
+        if self.type != NIL:
+            return self.type
+        self.type = LABEL if self.expr.endswith(":") else NIL
+        return self.type
     
-    def math(self, token):
+    def maths(self, token):
         if token.expr in maths[self.expr]:
             return True
         return False

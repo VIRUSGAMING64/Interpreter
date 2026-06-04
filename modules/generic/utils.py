@@ -14,6 +14,8 @@ def getPrio(expr):
         return 1
     if op in P2:
         return 2
+    if op in P3:
+        return 3
     return -1
 
 def isdelim(s):
@@ -53,6 +55,9 @@ operations = {
     "-":lambda a, b: a.expr - b.expr,
     "*":lambda a, b: a.expr * b.expr,
     "/":lambda a, b: a.expr // b.expr,
+    "<<":lambda a,b: a.expr << b.expr,
+    ">>":lambda a,b: a.expr >> b.expr,
+    "**":lambda a,b: a.expr ** b.expr,
     "!":lambda a:  not a.expr,
     "|":lambda a, b: a.expr | b.expr,
     "^":lambda a, b: a.expr ^ b.expr,
@@ -63,8 +68,10 @@ operations = {
     ">=": lambda a, b: a.expr >= b.expr,
     "<": lambda a, b: a.expr < b.expr,
     ">": lambda a, b: a.expr > b.expr,
-    "=": asign,
-    "%": lambda a, b: a.expr % b.expr
+    "%": lambda a, b: a.expr % b.expr,
+    "=>": lambda a,b: (not a.expr) | b.expr,
+    "<=>": lambda a,b: ((not a.expr) | b.expr) ^ ((not b.expr) | a.expr),
+    "=": asign
 }
 
 def process_op(b,a,op, mem):

@@ -1,184 +1,126 @@
-# ASM-PyPas 🚀
+# cryton2
 
-ASM-PyPas es un intérprete experimental con backend en Python y una interfaz web para crear, guardar y ejecutar código desde el navegador.
+<p align="center">
+  <strong>Un intérprete experimental con backend en Python y una interfaz web moderna para el desarrollo ágil.</strong>
+</p>
 
-## ✨ Resumen
+---
 
-- 🌐 Servidor HTTP en Flask.
-- 🧠 Intérprete propio (tokenización, parser y ejecución).
-- 📝 Gestión de archivos de código en `codes/`.
-- 🔌 API para ejecutar, guardar, listar y borrar archivos.
+## Descripción
 
-## 🆕 Novedades incluidas en este README
+Un simple interpreter (proposito educativo solamente)
 
-- ✅ Estructura del repositorio actualizada a lo que existe hoy.
-- ✅ Se añadieron `guic/`, `docs/` y scripts recientes.
-- ✅ Se incluyó `scripts/interpreter_extreme_tests.py` como validador de estrés.
-- ✅ Se eliminaron referencias detalladas a librerías de JavaScript.
+## Características Principales
 
-## ✅ Estado actual
+- **Núcleo Propio:** Implementación completa de Lexer, Parser y Árbol de Sintaxis Abstracta (AST).
+- **Interfaz Web:** Editor de código integrado con resaltado de sintaxis (CodeMirror).
+- **Persistencia:** Sistema de guardado y carga de snippets en el servidor.
+- **Ejecución en Tiempo Real:** Feedback inmediato de la ejecución del código a través de una API REST.
+- **Herramientas de Build:** Scripts automatizados para la generación y limpieza del frontend.
 
-Actualmente el proyecto permite:
+## Stack Tecnológico
 
-- 📁 Crear, abrir y eliminar archivos de código.
-- 💾 Guardar cambios.
-- ▶️ Ejecutar código vía API y devolver resultado/errores.
-- 🔒 Validar nombres de archivo para evitar accesos inseguros.
+| Componente | Tecnología |
+| :--- | :--- |
+| **Backend** | Python 3.10+ & Flask |
+| **Frontend** | React, Tailwind CSS |
+| **Editor** | CodeMirror |
+| **Persistencia** | Filesystem (JSON/Plain Text) |
+| **Contenedor** | Docker |
 
-## 🏗️ Arquitectura
+## Inicio Rápido
 
-- ⚙️ `main.py`: arranque del servidor en puerto `8000`.
-- 🧩 `modules/interpreter/`: núcleo del intérprete.
-- 🔌 `modules/web/`: rutas, API y utilidades web.
-- 🛠️ `modules/generic/`: helpers compartidos.
-- 🖥️ `gui/`: fuentes de la interfaz.
-- 📦 `guic/`: salida generada para servir en runtime.
-- 📂 `codes/`: archivos editables por el usuario.
-- 🧪 `scripts/`: ejecución, build y utilidades.
+### Requisitos Previos
 
-## 🌳 Estructura del repositorio
+- Python 3.10 o superior
+- Pip (gestor de paquetes de Python)
 
-```text
-asm-pypas/
-├── 📄 README.md
-├── 📄 Dockerfile
-├── 📄 requirements.txt
-├── 📄 main.py
-├── 📄 build.js
-├── 📁 gui/
-│   ├── 📄 index.html
-│   ├── 📄 index.jsx
-│   ├── 📁 app/
-│   └── 📁 react/
-├── 📁 modules/
-│   ├── 📄 __init__.py
-│   ├── 📁 generic/
-│   │   └── 📄 utils.py
-│   ├── 📁 interpreter/
-│   │   ├── 📄 __init__.py
-│   │   ├── 📄 Exceptions.py
-│   │   ├── 📄 ExprParser.py
-│   │   ├── 📄 Lexer.py
-│   │   ├── 📄 Tokens.py
-│   │   ├── 📄 builtin.py
-│   │   ├── 📄 debug.py
-│   │   ├── 📄 mainhandler.py
-│   │   ├── 📄 memory.py
-│   │   ├── 📄 statics_values.py
-│   │   ├── 📄 structures.py
-│   │   └── 📄 utils.py
-│   └── 📁 web/
-│       ├── 📄 __init__.py
-│       ├── 📄 index.py
-│       ├── 📁 api/
-│       │   └── 📄 endpoints.py
-│       └── 📁 core/
-│           ├── 📄 config.py
-│           ├── 📄 errors.py
-│           ├── 📄 saver.py
-│           └── 📄 utils.py
-├── 📁 scripts/
-│   ├── 📄 buildpage.sh
-│   ├── 📄 run.sh
-│   ├── 📄 runsample.sh
-│   ├── 📄 clean.cpp
-│   └── 📄 clean
-```
+### Instalación
 
-## 📋 Requisitos
+1. **Clonar el repositorio:**
+   ```bash
+   git clone https://github.com/VIRUSGAMING64/asm-pypas.git
+   cd asm-pypas
+   ```
 
-- 🐍 Python 3.10+.
-- 📦 pip.
-- ✅ Dependencia backend actual (`requirements.txt`): Flask.
+2. **Configurar el entorno virtual:**
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate  # En Windows: .venv\Scripts\activate
+   ```
 
-## 🛠️ Instalación
+3. **Instalar dependencias:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-```bash
-git clone https://github.com/VIRUSGAMING64/asm-pypas.git
-cd asm-pypas
+### Ejecución
 
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-## ▶️ Ejecución
-
-Opción directa:
-
+Simplemente ejecuta el script principal:
 ```bash
 python3 main.py
 ```
-
-Opción con script:
-
+O utiliza los scripts de automatización:
 ```bash
 bash scripts/run.sh
 ```
 
-Servidor:
+Accede a la interfaz en: `http://localhost:8000`
 
-- 🌍 http://127.0.0.1:8000
-- 🌍 http://localhost:8000
+## Referencia de la API
 
-## 🔄 Flujo de uso
+| Método | Endpoint | Descripción |
+| :--- | :--- | :--- |
+| `POST` | `/api/run` | Ejecuta el código enviado. |
+| `POST` | `/api/save` | Guarda el contenido en un archivo. |
+| `GET` | `/api/getcode` | Obtiene el contenido de un snippet. |
+| `GET` | `/api/initcodes` | Lista todos los archivos disponibles. |
+| `GET` | `/api/newcode` | Crea un nuevo archivo vacío. |
+| `GET` | `/api/delcurr` | Elimina el archivo especificado. |
+| `GET` | `/api/kill` | Detiene la ejecución actual. |
 
-1. Abre la app en el navegador.
-2. Crea o selecciona un archivo.
-3. Edita el contenido.
-4. Guarda y ejecuta desde la interfaz.
-5. Revisa salida y errores devueltos por la API.
+## Estructura del Proyecto
 
-## 🔗 API
+Este proyecto sigue una estructura modular para facilitar el desarrollo y mantenimiento:
 
-Endpoints principales:
+-   `main.py`: El punto de entrada principal de la aplicación. Configura y arranca el servidor Flask.
 
-- `GET /`: interfaz principal.
-- `GET /api`: endpoint para referencia/archivo de API en frontend.
-- `POST /api/run`: ejecuta código.
-- `POST /api/save`: guarda código.
-- `GET|POST /api/getcode?name=<archivo>`: obtiene contenido.
-- `GET /api/initcodes`: lista entradas disponibles.
-- `GET /api/newcode?name=<archivo>`: crea una entrada vacía.
-- `GET /api/delcurr?name=<archivo>`: elimina una entrada.
+-   `modules/`: Contiene la lógica central del backend, dividida en submódulos:
+    -   `interpreter/`: El corazón del intérprete. Incluye:
+        -   `Lexer.py`: Encargado del análisis léxico, transformando el código fuente en tokens.
+        -   `ExprParser.py`: Implementa el parser para construir el Árbol de Sintaxis Abstracta (AST).
+        -   `structures.py`: Define las estructuras de datos usadas durante la interpretación (ej. para variables, funciones).
+        -   `memory/`: Gestión de la memoria del intérprete.
+        -   `builtin/`: Implementaciones de funciones y operadores predefinidos del lenguaje.
+        -   `auxiliar/`: Utilidades internas y valores estáticos para el intérprete.
+    -   `web/`: Módulos relacionados con la capa web y la API REST.
+        -   `index.py`: Define las rutas principales del servidor Flask.
+        -   `api/endpoints.py`: Maneja los endpoints de la API para interacción con el intérprete y gestión de código.
+        -   `core/`: Contiene utilidades para la configuración, manejo de errores y persistencia (ej. `saver.py`).
 
-Formato de payload para `run` y `save`:
+-   `gui/`: La carpeta fuente del frontend, desarrollada con React y JSX.
+    -   `index.jsx`: El componente principal de la aplicación React.
+    -   `app/`: Contiene los estilos, assets y componentes reutilizables del frontend.
+        -   `components/`: Componentes React como `Button.jsx` y `Saves.jsx`.
+        -   `libs/`: Librerías de terceros como CodeMirror (editor de código) e Iconfont (iconos).
 
-```json
-{
-    "name": "archivo.c",
-    "code": "..."
-}
-```
+-   `guic/`: La salida generada y compilada del frontend a partir de `gui/`, lista para ser servida por el servidor Flask.
 
-## 🧰 Scripts
+-   `codes/`: Directorio donde se almacenan los snippets de código que los usuarios crean y guardan a través de la interfaz web.
 
-- 🚀 `scripts/run.sh`: construye frontend generado, ejecuta `python -OO main.py` y limpia.
-- 🧱 `scripts/buildpage.sh`: regenera `guic/` desde `gui/`.
-- 🧪 `scripts/interpreter_extreme_tests.py`: pruebas de estrés del intérprete.
-- 🧹 `scripts/clean` y `scripts/clean.cpp`: utilidad de limpieza.
-- ▶️ `scripts/runsample.sh`: ejecución auxiliar de ejemplo.
+-   `scripts/`: Contiene scripts de automatización para diversas tareas:
+    -   `run.sh`: Script principal para levantar el entorno de desarrollo.
+    -   `buildpage.sh`: Script para compilar el frontend (`gui/` a `guic/`).
+    -   `clean`: Scripts para limpiar artefactos generados.
+    -   `interpreter_extreme_tests.py`: Pruebas de estrés para el intérprete.
 
-## 🧪 Pruebas
+-   `tests/`: Directorio para pruebas unitarias y de integración del backend.
 
-- La carpeta `tests/` existe, pero está vacía actualmente.
-- La validación principal de estrés está en `scripts/interpreter_extreme_tests.py`.
+-   `requirements.txt`: Lista de dependencias de Python necesarias para el proyecto
 
-## 📚 Documentación
+-   `Dockerfile`: Archivo para construir la imagen Docker de la aplicación.
 
-- Documentación técnica y reportes en `docs/`.
-- Frontend legado disponible en `old_gui/`.
+## Roadmap
 
-## 🤖 Uso de IA en el proyecto
-
-La IA se utilizó como apoyo. En concreto, se empleó para:
-
-- redactar y reorganizar partes de la documentación, incluyendo este README.
-- ayudar con el tailwind de algunos elementos frontend
-- ayudar a generar dockerfile
-
-## ⚠️ Limitaciones actuales
-
-- Parte del proyecto sigue en estado experimental.
-- No hay una suite automatizada unificada dentro de `tests/`.
-- El lenguaje del intérprete no implementa aún todas las características de un lenguaje completo.
+- [ ] Implementar límites de tiempo (timeouts) para ejecuciones.
+- [ ] Expandir la gramática del lenguaje soportado.
